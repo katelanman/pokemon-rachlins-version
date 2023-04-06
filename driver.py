@@ -20,7 +20,10 @@ with open('./data/pokemon.csv', 'r', encoding='UTF8') as f:
         line_poke = Pokemon(line)
         pokemons[line[1]] = line_poke
 
-defender = pokemons['Vileplume']
+for move in moves:
+    print(moves[move].name, moves[move].effects)
+
+defender = pokemons['Onix']
 attacker = pokemons['Geodude']
 move_choice = moves['Earthquake']
 
