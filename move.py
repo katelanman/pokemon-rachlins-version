@@ -60,6 +60,8 @@ class Move:
                   "Ground": 0.5, "Flying": 1, "Psychic": 1, "Bug": 1, "Rock": 1, "Ghost": 1, "Dragon": 2, "Dark": 2,
                   "Steel": 0.5, "Fairy": 1}
     }
+    STAGES = {-6: 0.35, -5: 0.28, -4: 0.33, -3: 0.4, -2: 0.5, -1: 0.66,
+              0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4}
 
     inflict_status = {'burn': 'Burn', 'freez': 'Freeze', 'paralyz': 'Paralyze', 'flinch': 'Flinch',
                 'poisoni': 'Poison', 'confus': 'Confuse'}
@@ -80,7 +82,7 @@ class Move:
         self.generate_effects()
 
     def __str__(self):
-        return f'{self.name}, a {self.type} {self.cat} move with {self.pow} POW'
+        return f'{self.name}, a {self.type} {self.cat} move with {self.pow} POW. \nEffects: {str(self.effects)}'
 
     def generate_effects(self):
         if 'no secondary effect' not in self.desc:
@@ -132,6 +134,10 @@ class Move:
                 if 'poisons' in sent and 'Poison' not in self.effects:
                     self.effects['Poison'] = {'chance': 1}
 
+                if 'fatigue' in sent and 'Confuse' in self.effects:
+                    del self.effects['Confuse']
+                    self.effects['Fatigues'] = {}
+
                 if 'user to faint' in sent and self.pow > 0:
                     if 'SelfDestruct' not in self.effects:
                         self.effects['SelfDestruct'] = {}
@@ -153,13 +159,14 @@ class Move:
                         self.effects['Heal']['type'] = 'selfheal'
 
     def calc_damage(self, attacker, defender):
-        # Checks critical
-        crit_check = random.randint(0, 255)
-        crit = 1
-        if 'High Crit' in self.effects:
-            crit_check = int(crit_check / 8)
-        if crit_check < int(attacker.speed / 2):
-            crit = 2
+
+        hit_check = self.acc * attacker.accuracy / defender.evasion
+        if random.random() > hit_check:
+            print('It missed!')
+            if 'Crash' in self.effects:
+                print(f'{attacker.name} took 1 HP of crash damage!')
+                attacker.health -= 1
+            return 0
 
         # Checks category
         if self.cat == 'Physical':
@@ -169,16 +176,26 @@ class Move:
             a = attacker.spattack
             d = defender.spdefense
         else:
+            self.check_status(attacker, defender)
             return 0
+
+        # Checks critical
+        crit_check = random.randint(0, 255)
+        crit = 1
+        if 'High Crit' in self.effects:
+            crit_check = int(crit_check / 8)
+        if crit_check < int(attacker.speed / 2):
+            crit = 2
+
 
         damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a/d)/50 + 2)
         if self.type in attacker.types:
             damage *= 1.5
-            print('STAB!')
+            # print('STAB!')
         for poke_type in defender.types:
             change = Move.TYPE_ADVANTAGE[self.type][poke_type]
             damage *= change
-            print(f'{self.type} type move attacking {poke_type} type Pokemon. Modifier: {change}')
+            # print(f'{self.type} type move attacking {poke_type} type Pokemon. Modifier: {change}')
 
         damage *= random.randint(217, 255)/255
         damage = int(damage)
@@ -186,17 +203,107 @@ class Move:
         if crit > 1:
             print('Critical!')
 
-        print(f'{attacker.name} uses {self.name} against {defender.name}. It does {damage} damage!')
+        print(f'{damage} damage dealt!')
+        self.check_status(attacker, defender)
 
         return int(damage)
 
+    def check_status(self, attacker, defender):
+        if 'Burn' in self.effects and 'chance' in self.effects['Burn']:
+            if 'Freeze' in defender.effects:
+                del defender.effects['Freeze']
+                print(f'{defender.name} thawed out!')
+            if random.random() < self.effects['Burn']['chance']:
+                if 'Fire' in defender.types:
+                    print(f'{defender.name} got burned, but they are immune!')
+                elif 'Burn' in defender.start_status:
+                    print(f'{defender.name} got burned, but they are already burnt!')
+                else:
+                    print(f'{defender.name} got burned!')
+                    defender.start_status['Burn'] = {}
+                    defender.end_status['Burn'] = {}
+        if 'Poison' in self.effects and 'chance' in self.effects['Poison']:
+            if random.random() < self.effects['Poison']['chance']:
+                if 'Poison' in defender.start_status:
+                    print(f'{defender.name} got poisoned, but they are already poisoned!')
+                else:
+                    print(f'{defender.name} got poisoned!')
+                    defender.end_status['Poison'] = {}
+        if 'Freeze' in self.effects and 'chance' in self.effects['Freeze']:
+            if random.random() < self.effects['Freeze']['chance']:
+                if 'Freeze' in defender.start_status:
+                    print(f'{defender.name} got frozen, but they are already frozen!')
+                else:
+                    print(f'{defender.name} got frozen!')
+                    defender.start_status['Freeze'] = {}
+        if 'Paralyze' in self.effects:
+            if 'immune' not in self.effects['Paralyze'] or self.effects['Paralyze']['immune'] not in defender.types:
+                if 'chance' not in self.effects['Paralyze'] or random.random() < self.effects['Paralyze']['chance']:
+                    if 'Paralyze' in defender.start_status:
+                        print(f'{defender.name} got paralyzed, but they are already paralyzed!')
+                    else:
+                        print(f'{defender.name} got paralyzed!')
+                        defender.start_status['Paralyze'] = {}
+                        defender.end_status['Paralyze'] = {}
+            else:
+                print(f'{defender.name} got paralyzed, but they are immune!')
+        if 'Flinch' in self.effects and 'chance' in self.effects['Flinch']:
+            if random.random() < self.effects['Flinch']['chance']:
+                print(f'{defender.name} flinched!')
+                defender.start_status['Flinch'] = {}
+        if 'Confuse' in self.effects:
+            if 'chance' not in self.effects['Confuse'] or random.random() < self.effects['Confuse']['chance']:
+                if 'Confuse' in defender.start_status:
+                    print(f'{defender.name} got confused, but they are already confused!')
+                else:
+                    print(f'{defender.name} got confused!')
+                    defender.start_status['Confuse'] = {}
+
+
     def activate_move(self, attacker, defender):
-        print('')
 
+        print(f'{attacker.name} uses {self.name} against {defender.name}. ')
 
-        if 'Multihit' in self.effects:
+        if 'Useless' in self.effects:
+            print('It has no effect!')
+
+        elif 'Delayed' in self.effects and 'Delayed' not in attacker.start_status:
+            print(f'{attacker.name} is charging up!')
+            attacker.start_status['Delayed'] = self.name
+
+        elif 'Instakill' in self.effects:
+            hit_check = self.acc * attacker.accuracy / defender.evasion
+            if random.random() > hit_check or attacker.speed < defender.speed:
+                print('It missed!')
+            else:
+                print(f'It hit! {defender.name} immediately fainted!')
+                defender.health = 0
+
+        elif 'Multihit' in self.effects:
             if self.effects['Multihit']['times'] == 'multiple':
-                self.calc_damage(attacker, defender)
+                choice = [2, 3, 4, 5]
+                times = random.choices(choice, weights=[3, 3, 1, 1], k=1)[0]
+                print(f'It hits {times} times!')
+                for i in range(times):
+                    dmg = self.calc_damage(attacker, defender)
+                    defender.health -= dmg
+
+            elif self.effects['Multihit']['times'] == 'twice':
+                print('It hits 2 times!')
+                dmg = self.calc_damage(attacker, defender)
+                defender.health -= dmg
+                dmg = self.calc_damage(attacker, defender)
+                defender.health -= dmg
+        else:
+            dmg = self.calc_damage(attacker, defender)
+            defender.health -= dmg
+            if 'Recoil' in self.effects:
+                recoil = int(dmg/4)
+                print(f'{attacker.name} took {recoil} damage as recoil!')
+                attacker.health -= recoil
+            elif 'SelfDestruct' in self.effects:
+                print(f'{attacker.name} fainted after the attack!')
+                attacker.health = 0
 
 
 
