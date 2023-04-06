@@ -188,7 +188,7 @@ app.layout = html.Div([
         # ], style={'height': '45vh', 'float': 'left'}),
 
     # TODO: website font
-    ], style={'width': '43vw', 'height': '98vh', 'float': 'left', 'backgroundColor': '#EEEEEE',
+    ], style={'width': '40vw', 'height': '98vh', 'float': 'left', 'backgroundColor': '#EEEEEE',
               'marginLeft': '1vh', 'border': '2px solid #E4E4E4', 'borderLeft': '2px solid #C2C2C2',
               'borderTop': '2px solid #C2C2C2'})
 ], style={'backgroundColor': '#FCFCFC', 'color': '#313131'})

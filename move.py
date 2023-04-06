@@ -1,9 +1,8 @@
-
 import random
 import math
 
-class Move:
 
+class Move:
     TYPE_ADVANTAGE = {
         "Normal": {"Normal": 1, "Fire": 1, "Water": 1, "Grass": 1, "Electric": 1, "Ice": 1, "Fighting": 1, "Poison": 1,
                    "Ground": 1, "Flying": 1, "Psychic": 1, "Bug": 1, "Rock": 0.5, "Ghost": 0, "Dragon": 1, "Dark": 1,
@@ -64,7 +63,7 @@ class Move:
               0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4}
 
     inflict_status = {'burn': 'Burn', 'freez': 'Freeze', 'paralyz': 'Paralyze', 'flinch': 'Flinch',
-                'poisoni': 'Poison', 'confus': 'Confuse'}
+                      'poisoni': 'Poison', 'confus': 'Confuse'}
     boolean_vals = {'increased critical': 'High Crit', 'one-hit': 'Instakill', 'wild': 'Useless',
                     'recoil': 'Recoil', 'crash': 'Crash', ' following turn': 'Delayed',
                     'whatsoever': 'Useless'}
@@ -96,7 +95,8 @@ class Move:
                             self.effects[effect]['chance'] = float(
                                 sent[(sent.index('%') - 3):sent.index('%')].strip()) / 100
                         if 'cannot paralyze' in sent:
-                            self.effects['Paralyze']['immune'] = sent[sent.index('cannot paralyze') + 16:sent.index('-type')]
+                            self.effects['Paralyze']['immune'] = sent[
+                                                                 sent.index('cannot paralyze') + 16:sent.index('-type')]
 
                 for phrase, effect in Move.boolean_vals.items():
                     if phrase in sent and effect not in self.effects:
@@ -187,8 +187,7 @@ class Move:
         if crit_check < int(attacker.speed / 2):
             crit = 2
 
-
-        damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a/d)/50 + 2)
+        damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a / d) / 50 + 2)
         if self.type in attacker.types:
             damage *= 1.5
             # print('STAB!')
@@ -197,7 +196,7 @@ class Move:
             damage *= change
             # print(f'{self.type} type move attacking {poke_type} type Pokemon. Modifier: {change}')
 
-        damage *= random.randint(217, 255)/255
+        damage *= random.randint(217, 255) / 255
         damage = int(damage)
 
         if crit > 1:
@@ -259,7 +258,6 @@ class Move:
                     print(f'{defender.name} got confused!')
                     defender.start_status['Confuse'] = {}
 
-
     def activate_move(self, attacker, defender):
 
         print(f'{attacker.name} uses {self.name} against {defender.name}. ')
@@ -298,18 +296,9 @@ class Move:
             dmg = self.calc_damage(attacker, defender)
             defender.health -= dmg
             if 'Recoil' in self.effects:
-                recoil = int(dmg/4)
+                recoil = int(dmg / 4)
                 print(f'{attacker.name} took {recoil} damage as recoil!')
                 attacker.health -= recoil
             elif 'SelfDestruct' in self.effects:
                 print(f'{attacker.name} fainted after the attack!')
                 attacker.health = 0
-
-
-
-
-
-
-
-
-

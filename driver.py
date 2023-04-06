@@ -2,8 +2,8 @@
 from move import Move
 from pokemon import Pokemon
 
-moves = {}
-pokemons = {}
+moves = {} # {name: object}
+pokemons = {} # {name: object}
 
 with open('./data/moves.csv', 'r', encoding='UTF8') as f:
     f.readline()
