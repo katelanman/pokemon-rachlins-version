@@ -88,6 +88,12 @@ class Battle:
         else:
             faster.poke2_move.activare_move(faster, slower)
 
+        # Check to see if either Pokemon fainted, ending the battle
+        if faster.health <= 0:
+            return print(slower.name, "Wins!")
+        elif slower.health <= 0:
+            return print(faster.name, "Wins!")
+
         # Check the Slower Pokemon's starting Status
         if "Burn" in slower.start_status.keys():
             # burn cuts attack in half
@@ -154,6 +160,12 @@ class Battle:
         else:
             slower.poke2_move.activare_move(slower, faster)
 
+        # Check to see if either Pokemon Fainted, ending the battle
+        if faster.health <= 0:
+            return print(slower.name, "Wins!")
+        elif slower.health <= 0:
+            return print(faster.name, "Wins!")
+
         # Check end of turn statuses for each Pokemon
         # At the end of the turn poison and burn both take away 1/16th of the
         # effected Pokemon's total hp
@@ -181,6 +193,13 @@ class Battle:
             self.poke2.health -= self.poke2.max_health / 16
             self.poke1.health += self.poke2.max_health / 16
         '''
+
+        # Check to see if either Pokemon Fainted, ending the battle
+        if faster.health <= 0:
+            return print(slower.name, "Wins!")
+        elif slower.health <= 0:
+            return print(faster.name, "Wins!")
+        
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move
 
 
