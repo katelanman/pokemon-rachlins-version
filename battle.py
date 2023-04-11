@@ -226,14 +226,9 @@ class Battle:
             print(slower.name, "Wins!")
             return faster
         elif slower.health <= 0:
-<<<<<<< HEAD
-            return print(faster.name, "Wins!")
-
-=======
             print(faster.name, "Wins!")
             return slower
         
->>>>>>> f9057d90280d2ac0f0ebf101fbcdf80b419d78ac
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move
 
 
