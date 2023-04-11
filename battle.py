@@ -199,7 +199,7 @@ class Battle:
             return print(slower.name, "Wins!")
         elif slower.health <= 0:
             return print(faster.name, "Wins!")
-        
+
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move
 
 
