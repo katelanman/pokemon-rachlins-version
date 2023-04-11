@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import pandas as pd
 import base64
@@ -6,10 +6,54 @@ import base64
 def fake_type():
     return "Electric?"
 
-app = Dash(__name__)
+def fake_name():
+    # make sure names are capitalized
+    return "Pikachu?"
+
+fake_poke = {'pikachu': '1', 'snorlax': '2', 'charizard': '3'}
+fake_dict = {'move1': 1, 'move2': 2, 'move3': 3, 'move4': 4}
+pokemon = ""
+moves = []
+
+# app = Dash(__name__)
+app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 app.layout = html.Div([
+    # dbc.Modal(
+    #     [
+    #         dbc.ModalHeader(
+    #             dbc.ModalTitle("Welcome to Pokemon Showdown"), close_button=False
+    #         ),
+    #         dbc.ModalBody([
+    #             html.Div([
+    #                 dbc.Checklist(options={}, id='pokemon-options')
+    #             ], id='pokemon-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
+    #                                            'position': 'absolute', 'left': '2.5vw', 'top': '5vh',
+    #                                            'overflow': 'scroll'}),
+    #             html.Div([
+    #                 dbc.Checklist(options={}, id='move-options')
+    #             ], id='move-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
+    #                                         'position': 'absolute', 'left': '52.5vw', 'top': '5vh',
+    #                                         'overflow': 'scroll'})]
+    #         ),
+    #         dbc.ModalFooter(dbc.Button("Start Game", id="start-game")),
+    #     ],
+    #     id="new-game-selection",
+    #     keyboard=False,
+    #     backdrop="static",
+    #     fullscreen=True,
+    #     is_open=True
+    # ),
+
+    dbc.Modal([
+            dbc.ModalHeader(
+                dbc.ModalTitle("Invalid Selection")
+            ),
+            dbc.ModalBody(children='', id='error-message'),
+            dbc.ModalFooter()
+    ], id='select-error'),
+
     # col 1 - left side game interface
     html.Div([
         # row a - battle screen
@@ -116,10 +160,26 @@ app.layout = html.Div([
 
     # col 2 - right side descriptions
     html.Div([
+        # player choices
+        html.Div([
+            html.Button("New Game", id="new-game")
+            # pokemon select
+            # html.P('choose', style={'float': 'left'}),
+            # dcc.Dropdown(['pikachu', 'snorlax', 'jigglypuff', 'charizard'], id='player-pokemon',
+            #              style={'width': '8vw', 'float': 'left'}),
+            #
+            # # moves select
+            # html.P('choose', style={'float': 'left'}),
+            # dcc.Dropdown(['move1', 'move2', 'move3', 'move4', 'move5'], id='player-moves',
+            # #              id="multi-select-error",
+            #              multi=True, searchable=True, clearable=True, placeholder="Select Four Moves",
+            #              style={'width': '8vw', 'float': 'left'})
+        ], style={'width': '95%', 'height': '5%', 'backgroundColor': 'white', 'margin': '0 auto'}),
+
         # game history
         html.Div([
             # TODO: get game history & style
-        ], style={'overflow': 'scroll', 'width': '95%', 'height': '35%', 'backgroundColor': '#FCFCFC',
+        ], style={'overflow': 'scroll', 'width': '95%', 'height': '30%', 'backgroundColor': '#FCFCFC',
                   'margin': '2.5%'}),
 
         # row a - pokemon describe
@@ -130,41 +190,43 @@ app.layout = html.Div([
 
         # TODO: actual pokemon data
         html.Div([
-            html.Div([
-                html.P('POKEMON', style={'textIndent': '25px', 'fontWeight': 'bold', 'fontSize': '20px',
-                                         'float': 'left'}),
-                html.P('Types: ' + fake_type(),   style={'textIndent': '40px', 'fontWeight': 'bold'}),
-            ], style={'width': '95%', 'height': '10%'}),
+            dbc.Row([
+                html.P(f'{fake_name()}', style={'textIndent': '25px', 'fontWeight': 'bold', 'fontSize': '20px',
+                                                'float': 'left'}),
+                html.P('Types: ' + fake_type(),   style={'textIndent': '40px', 'fontWeight': 'bold',
+                                                         'fontSize': '16px'}),
+            ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
 
             # TODO: style bc it hates me ??
-            html.Div([
-                html.P('hP:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+            dbc.Row([
+                html.P('hP:', style={'textIndent': '40px','fontWeight': 'bold'}),
                 html.P('Stats:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Status:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Condition:', style={'textIndent': '40px', 'fontWeight': 'bold'})
-            ], style={'width': '95%', 'height': '40%', 'textAlign': 'left'})
+            ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
 
         ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
-                  'margin': '2.5%'}),
+                  'margin': '2.5%', 'position': 'relative'}),
 
         # TODO: actual pokemon data
         html.Div([
-            html.Div([
+            dbc.Row([
                 html.P('POKEMON', style={'textIndent': '25px', 'fontWeight': 'bold', 'fontSize': '20px',
                                          'float': 'left'}),
-                html.P('Types: ' + fake_type(), style={'textIndent': '40px', 'fontWeight': 'bold'}),
-            ], style={'width': '95%', 'height': '10%'}),
+                html.P('Types: ' + fake_type(), style={'textIndent': '40px', 'fontWeight': 'bold',
+                                                       'fontSize': '16px'}),
+            ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
 
             # TODO: style bc it hates me ??
-            html.Div([
+            dbc.Row([
                 html.P('hP:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Stats:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Status:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Condition:', style={'textIndent': '40px', 'fontWeight': 'bold'})
-            ], style={'width': '95%', 'height': '40%', 'textAlign': 'left'})
+            ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
 
         ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
-                  'margin': '2.5%'}),
+                  'margin': '2.5%', 'position': 'relative'}),
 
 
         # row a - pokemon describe
@@ -193,6 +255,7 @@ app.layout = html.Div([
               'borderTop': '2px solid #C2C2C2'})
 ], style={'backgroundColor': '#FCFCFC', 'color': '#313131'})
 
+
 '''
 @app.callback()
 def get_move():
@@ -213,6 +276,65 @@ def execute_move(move1, move2, move3, move4):
     pass
     
 '''
+
+# @app.callback(
+#     Output("new-game-selection", "is_open"),
+#     [Input("new-game", "n_clicks")], #Input("start-game", "n_clicks")],
+#     [State("new-game-selection", "is_open")],
+# )
+# def toggle_modal(n_open, is_open):
+#     if n_open:# or n_close:
+#         return not is_open
+#     return is_open
+#
+# # TODO: replace fake poke with real dict
+# @app.callback(
+#     Output('pokemon-options', 'options'),
+#     Input('pokemon-options', 'options'),
+#     State('pokemon-options', 'options'))
+# def get_poke_options(curr, state):
+#     options = curr
+#     for key, value in fake_poke.items():
+#         options[key] = key
+#     return options
+#
+# # TODO: replace fake with real
+# @app.callback(
+#     Output('move-options', 'options'),
+#     Input('move-options', 'options'),
+#     State('move-options', 'options'))
+# def get_poke_options(curr, state):
+#     options = curr
+#     for key, value in fake_dict.items():
+#         options[key] = key
+#     return options
+#
+# @app.callback(
+#     [Output('select-error', 'is_open'),
+#      Output('new-game-selection', 'is_open', allow_duplicate=True),
+#      Output('error-message', 'children')],
+#     Input('start-game', 'n_clicks'),
+#     State('pokemon-options', 'value'),
+#     State('move-options', 'value'),
+#     prevent_initial_call=True
+# )
+# def pokemon_chosen(started, poke_choice, moves_choice):
+#     if not poke_choice:
+#         return True, True, "Must choose a pokemon"
+#
+#     if len(poke_choice) != 1:
+#         return True, True, "Must select only one pokemon"
+#
+#     if not moves_choice:
+#         return True, True, "Must select moves"
+#
+#     if len(moves_choice) != 4:
+#         return True, True, "Must select exactly 4 moves"
+#
+#     pokemon = poke_choice
+#     moves = moves_choice
+#     return False, False, ""
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
