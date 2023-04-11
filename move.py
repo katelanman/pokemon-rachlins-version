@@ -1,10 +1,8 @@
 import random
 import math
 
-<<<<<<< HEAD
 
-class Move:
-=======
+
 class Move:
     """
     Move object that represents a single move a Pokemon can use from Gen 1.
@@ -30,7 +28,6 @@ class Move:
     """
 
     # Global variables for important info
->>>>>>> f86284fa573963b377f277da91c1fd28e2127c2c
     TYPE_ADVANTAGE = {
         "Normal": {"Normal": 1, "Fire": 1, "Water": 1, "Grass": 1, "Electric": 1, "Ice": 1, "Fighting": 1, "Poison": 1,
                    "Ground": 1, "Flying": 1, "Psychic": 1, "Bug": 1, "Rock": 0.5, "Ghost": 0, "Dragon": 1, "Dark": 1,
@@ -256,12 +253,9 @@ class Move:
             crit = 2
             print('Critical!')
 
-<<<<<<< HEAD
-        damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a / d) / 50 + 2)
-=======
         # Calculates damage using formula, accounts for STAB / type advantage
         damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a/d)/50 + 2)
->>>>>>> f86284fa573963b377f277da91c1fd28e2127c2c
+
         if self.type in attacker.types:
             damage *= 1.5
             # print('STAB!')
@@ -270,12 +264,10 @@ class Move:
             damage *= change
             # print(f'{self.type} type move attacking {poke_type} type Pokemon. Modifier: {change}')
 
-<<<<<<< HEAD
         damage *= random.randint(217, 255) / 255
-=======
+
         # Final damage calculations and checks for status proc
         damage *= random.randint(217, 255)/255
->>>>>>> f86284fa573963b377f277da91c1fd28e2127c2c
         damage = int(damage)
         print(f'{damage} damage dealt!')
         self.check_status(attacker, defender)
@@ -295,7 +287,7 @@ class Move:
 
         # Checks if the move procs Burn
         if 'Burn' in self.effects and 'chance' in self.effects['Burn']:
-            if 'Freeze' in defender.effects:
+            if 'Freeze' in defender.start_status:
                 del defender.effects['Freeze']
                 print(f'{defender.name} thawed out!')
             if random.random() < self.effects['Burn']['chance']:
@@ -353,8 +345,6 @@ class Move:
                     print(f'{defender.name} got confused!')
                     defender.start_status['Confuse'] = {'turns': random.randint(1, 4)}
 
-<<<<<<< HEAD
-=======
         # Checks if move procs Sleep
         if 'Sleep' in self.effects:
             user = defender
@@ -389,7 +379,6 @@ class Move:
                         user.start_status['StatChange'][stat] = val
                         user.end_status['StatChange'][stat] = val
 
->>>>>>> f86284fa573963b377f277da91c1fd28e2127c2c
     def activate_move(self, attacker, defender):
         """
         Complete activates a move, including multi damage calculation / non-status effects
@@ -452,8 +441,6 @@ class Move:
             elif 'SelfDestruct' in self.effects:
                 print(f'{attacker.name} fainted after the attack!')
                 attacker.health = 0
-<<<<<<< HEAD
-=======
 
             # Checks if move will heal attacker
             elif 'Heal' in self.effects:
@@ -465,10 +452,3 @@ class Move:
 
 
 
-
-
-
-
-
-
->>>>>>> f86284fa573963b377f277da91c1fd28e2127c2c
