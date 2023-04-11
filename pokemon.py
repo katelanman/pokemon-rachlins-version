@@ -93,3 +93,6 @@ class Pokemon():
         """
         self.actual_moves = random.sample(self.moveset, 4)
 
+    def choose_random_move(self):
+        return random.sample(self.actual_moves, 1)[0]
+

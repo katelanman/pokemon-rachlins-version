@@ -20,31 +20,31 @@ app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 app.layout = html.Div([
-    dbc.Modal(
-        [
-            dbc.ModalHeader(
-                dbc.ModalTitle("Welcome to Pokemon Showdown"), close_button=False
-            ),
-            dbc.ModalBody([
-                html.Div([
-                    dbc.Checklist(options={}, id='pokemon-options')
-                ], id='pokemon-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
-                                               'position': 'absolute', 'left': '2.5vw', 'top': '5vh',
-                                               'overflow': 'scroll'}),
-                html.Div([
-                    dbc.Checklist(options={}, id='move-options')
-                ], id='move-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
-                                            'position': 'absolute', 'left': '52.5vw', 'top': '5vh',
-                                            'overflow': 'scroll'})]
-            ),
-            dbc.ModalFooter(dbc.Button("Start Game", id="start-game")),
-        ],
-        id="new-game-selection",
-        keyboard=False,
-        backdrop="static",
-        fullscreen=True,
-        is_open=True
-    ),
+    # dbc.Modal(
+    #     [
+    #         dbc.ModalHeader(
+    #             dbc.ModalTitle("Welcome to Pokemon Showdown"), close_button=False
+    #         ),
+    #         dbc.ModalBody([
+    #             html.Div([
+    #                 dbc.Checklist(options={}, id='pokemon-options')
+    #             ], id='pokemon-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
+    #                                            'position': 'absolute', 'left': '2.5vw', 'top': '5vh',
+    #                                            'overflow': 'scroll'}),
+    #             html.Div([
+    #                 dbc.Checklist(options={}, id='move-options')
+    #             ], id='move-select', style={'width': '45vw', 'height': '90%', 'backgroundColor': '#E4E4E4',
+    #                                         'position': 'absolute', 'left': '52.5vw', 'top': '5vh',
+    #                                         'overflow': 'scroll'})]
+    #         ),
+    #         dbc.ModalFooter(dbc.Button("Start Game", id="start-game")),
+    #     ],
+    #     id="new-game-selection",
+    #     keyboard=False,
+    #     backdrop="static",
+    #     fullscreen=True,
+    #     is_open=True
+    # ),
 
     dbc.Modal([
             dbc.ModalHeader(
@@ -277,63 +277,63 @@ def execute_move(move1, move2, move3, move4):
     
 '''
 
-@app.callback(
-    Output("new-game-selection", "is_open"),
-    [Input("new-game", "n_clicks")], #Input("start-game", "n_clicks")],
-    [State("new-game-selection", "is_open")],
-)
-def toggle_modal(n_open, is_open):
-    if n_open:# or n_close:
-        return not is_open
-    return is_open
-
-# TODO: replace fake poke with real dict
-@app.callback(
-    Output('pokemon-options', 'options'),
-    Input('pokemon-options', 'options'),
-    State('pokemon-options', 'options'))
-def get_poke_options(curr, state):
-    options = curr
-    for key, value in fake_poke.items():
-        options[key] = key
-    return options
-
-# TODO: replace fake with real
-@app.callback(
-    Output('move-options', 'options'),
-    Input('move-options', 'options'),
-    State('move-options', 'options'))
-def get_poke_options(curr, state):
-    options = curr
-    for key, value in fake_dict.items():
-        options[key] = key
-    return options
-
-@app.callback(
-    [Output('select-error', 'is_open'),
-     Output('new-game-selection', 'is_open', allow_duplicate=True),
-     Output('error-message', 'children')],
-    Input('start-game', 'n_clicks'),
-    State('pokemon-options', 'value'),
-    State('move-options', 'value'),
-    prevent_initial_call=True
-)
-def pokemon_chosen(started, poke_choice, moves_choice):
-    if not poke_choice:
-        return True, True, "Must choose a pokemon"
-
-    if len(poke_choice) != 1:
-        return True, True, "Must select only one pokemon"
-
-    if not moves_choice:
-        return True, True, "Must select moves"
-
-    if len(moves_choice) != 4:
-        return True, True, "Must select exactly 4 moves"
-
-    pokemon = poke_choice
-    moves = moves_choice
-    return False, False, ""
+# @app.callback(
+#     Output("new-game-selection", "is_open"),
+#     [Input("new-game", "n_clicks")], #Input("start-game", "n_clicks")],
+#     [State("new-game-selection", "is_open")],
+# )
+# def toggle_modal(n_open, is_open):
+#     if n_open:# or n_close:
+#         return not is_open
+#     return is_open
+#
+# # TODO: replace fake poke with real dict
+# @app.callback(
+#     Output('pokemon-options', 'options'),
+#     Input('pokemon-options', 'options'),
+#     State('pokemon-options', 'options'))
+# def get_poke_options(curr, state):
+#     options = curr
+#     for key, value in fake_poke.items():
+#         options[key] = key
+#     return options
+#
+# # TODO: replace fake with real
+# @app.callback(
+#     Output('move-options', 'options'),
+#     Input('move-options', 'options'),
+#     State('move-options', 'options'))
+# def get_poke_options(curr, state):
+#     options = curr
+#     for key, value in fake_dict.items():
+#         options[key] = key
+#     return options
+#
+# @app.callback(
+#     [Output('select-error', 'is_open'),
+#      Output('new-game-selection', 'is_open', allow_duplicate=True),
+#      Output('error-message', 'children')],
+#     Input('start-game', 'n_clicks'),
+#     State('pokemon-options', 'value'),
+#     State('move-options', 'value'),
+#     prevent_initial_call=True
+# )
+# def pokemon_chosen(started, poke_choice, moves_choice):
+#     if not poke_choice:
+#         return True, True, "Must choose a pokemon"
+#
+#     if len(poke_choice) != 1:
+#         return True, True, "Must select only one pokemon"
+#
+#     if not moves_choice:
+#         return True, True, "Must select moves"
+#
+#     if len(moves_choice) != 4:
+#         return True, True, "Must select exactly 4 moves"
+#
+#     pokemon = poke_choice
+#     moves = moves_choice
+#     return False, False, ""
 
 
 if __name__ == "__main__":
