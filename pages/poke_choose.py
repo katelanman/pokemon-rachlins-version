@@ -23,22 +23,22 @@ layout = html.Div([
 				html.Div([
 					dbc.Checklist(options={}, id='pokemon-options')
 				], id='pokemon-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
-											   'overflow': 'scroll', 'position': 'absolute', 'left': '2.5vw',
-											   'top': '20vh'}),
+												'overflow': 'scroll', 'position': 'absolute', 'left': '2.5vw',
+												'top': '20vh'}),
 				html.Div([
 					dbc.Checklist(options={}, id='move-options')
 				], id='move-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
-											   'overflow': 'scroll', 'position': 'absolute', 'left': '52.5vw',
-											   'top': '20vh'})
+											'overflow': 'scroll', 'position': 'absolute', 'left': '52.5vw',
+											'top': '20vh'})
 			])
 		]),
 
 		dbc.Modal([
-            dbc.ModalHeader(
-                dbc.ModalTitle("Invalid Selection")
-            ),
-            dbc.ModalBody(children='', id='error-message'),
-            dbc.ModalFooter()], id='select-error')
+				dbc.ModalHeader(
+				dbc.ModalTitle("Invalid Selection")
+			),
+			dbc.ModalBody(children='', id='error-message'),
+			dbc.ModalFooter()], id='select-error')
 		])
 
 # TODO: replace fake poke with real dict
@@ -48,11 +48,11 @@ layout = html.Div([
 	State('pokemon-options', 'options')
 )
 def get_poke_options(curr, state):
-    options = curr
-    for key, value in fake_poke.items():
-        options[key] = key
-
-    return options
+	options = curr
+	for key, value in fake_poke.items():
+		options[key] = key
+		print(options)
+	return options
 
 # TODO: replace fake with real
 @app.callback(
