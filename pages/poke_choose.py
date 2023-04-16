@@ -2,72 +2,58 @@ from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import pandas as pd
 import base64
-
+from pokemon import Pokemon
+from driver import pokemons
 
 fake_poke = {'pikachu': 'pikachu', 'snorlax': 'snorlax', 'charizard': 'charizard'}
 fake_dict = {'move1': 1, 'move2': 2, 'move3': 3, 'move4': 4}
 pokemon = ""
-data = pd.read_csv('./data/pokemon.csv')
-names = data.iloc[:, 1]
-print(names)
 moves = []
+
 
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 layout = html.Div([
+		dcc.Store(id="player-pokemon", storage_type="session"),
+		dcc.Store(id="player-moves", storage_type="session"),
 		html.Div([
 			html.Div([
 				html.H1("Welcome to Pokemon Showdown")
 			], style={'width': '100vw', 'height': '10vh', 'borderBottom': '1px solid black'}),
 			html.Div([
 				html.Div([
-					dbc.Checklist(options={}, id='pokemon-options')
+					dcc.RadioItems(id='pokemon-options', options=list(pokemons.keys()))
 				], id='pokemon-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
 												'overflow': 'scroll', 'position': 'absolute', 'left': '2.5vw',
 												'top': '20vh'}),
 				html.Div([
-					dbc.Checklist(options={}, id='move-options')
+					dbc.Checklist(options=[], id='move-options')
 				], id='move-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
 											'overflow': 'scroll', 'position': 'absolute', 'left': '52.5vw',
 											'top': '20vh'})
 			])
-		]),
-
-		dbc.Modal([
-				dbc.ModalHeader(
-				dbc.ModalTitle("Invalid Selection")
-			),
-			dbc.ModalBody(children='', id='error-message'),
-			dbc.ModalFooter()], id='select-error')
 		])
+	])
 
-# TODO: replace fake poke with real dict
-@app.callback(
-	Output('pokemon-options', 'options'),
-	Input('pokemon-options', 'options'),
-	State('pokemon-options', 'options')
-)
-def get_poke_options(curr, state):
-	options = curr
-	for key, value in fake_poke.items():
-		options[key] = key
-		print(options)
-	return options
 
-# TODO: replace fake with real
-@app.callback(
-    Output('move-options', 'options'),
-    [Input('move-options', 'options'),
-     Input('pokemon-options', 'value')],
-    State('move-options', 'options'))
-def get_move_options(curr, chosen, state):
-	options = curr
-	if chosen:
-		for key, value in fake_dict.items():
-			options[key] = key
-
-	return options
+# # TODO: replace fake with real
+# @app.callback(
+# 	Output(component_id='move-options', component_property='options'),
+# 	Input(component_id='pokemon-options', component_property='value'))
+# def get_move_options(chosen):
+# 	options = []
+# 	print(chosen)
+# 	if chosen:
+# 		for move in pokemons[chosen].moveset:
+# 			options.append(move)
 #
+# 	return options
+#
+# @app.callback(
+# 	Output("pokemon", "data"),
+#	Input("", "")
+# )
+
 # @app.callback(
 #     [Output('select-error', 'is_open'),
 #      Output('new-game-selection', 'is_open', allow_duplicate=True),
