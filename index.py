@@ -42,7 +42,8 @@ def display_page(pathname):
 # TODO: replace fake with real
 @app.callback(
     Output('move-options', 'options'),
-    Input('pokemon-options', 'value')
+    Input('pokemon-options', 'value'),
+    prevent_initial_call=True
 )
 def get_move_options(chosen):
     options = []
@@ -57,24 +58,28 @@ def get_move_options(chosen):
      Output('player-moves', 'data')],
     [Input('start-game-button', 'n_clicks'),
      Input('pokemon-options', 'value'),
-     Input('move-options', 'value')]
+     Input('move-options', 'value')],
+    prevent_initial_call=True
 )
 def pokemon_chosen(started, poke_choice, moves_choice):
     if started:
         return poke_choice, moves_choice
 
-    return PreventUpdate
+    return None, None
 
 @app.callback(
     [Output('start-game-button', 'disabled'),
      Output('select-error', 'is_open')],
-    Input('move-options', 'value')
+    Input('move-options', 'value'),
+    prevent_initial_call=True
 )
 def enable_start(moves_chosen):
-    if moves_chosen > 4 or moves_chosen == 0:
+    if moves_chosen and len(moves_chosen) > 4:
         return True, True
-    else:
+    elif moves_chosen:
         return False, False
+
+    return True, False
 
 
 # Run the app on localhost:8050
