@@ -378,6 +378,7 @@ class Move:
                         val = min(max(user.start_status['StatChange'][stat] + self.effects['StatChange']['change'], -6), 6)
                         user.start_status['StatChange'][stat] = val
                         user.end_status['StatChange'][stat] = val
+                    print(f"{user.name}'s {stat} changed by {self.effects['StatChange']['change']}")
 
     def activate_move(self, attacker, defender):
         """
@@ -387,6 +388,10 @@ class Move:
         :param defender (Pokemon: Pokemon object being hit by move
         :return: None
         """
+
+        if self.name == 'Blank':
+            print(f'{attacker.name} was stunned!')
+            return None
 
         print(f'{attacker.name} uses {self.name} against {defender.name}. ')
 
@@ -409,7 +414,7 @@ class Move:
                 defender.health = 0
 
         # Checks if the move will hit multiple times
-        elif 'Multihit' in self.effects:
+        elif 'Multihit' in self.effects and 'times' in self.effects['Multihit']:
             if self.effects['Multihit']['times'] == 'multiple':
                 choice = [2, 3, 4, 5]
                 times = random.choices(choice, weights=[3, 3, 1, 1], k=1)[0]

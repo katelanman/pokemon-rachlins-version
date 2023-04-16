@@ -5,16 +5,16 @@ import random
 
 
 class Battle:
+    blank = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does nothing', ''])
 
     def __init__(self, poke1, poke2):
         self.poke1 = poke1
         self.poke2 = poke2
-        blank = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does nothing', ''])
 
     def round(self, poke1_move, poke2_move):
 
-        print(f'Pokemon 1 Health: {self.poke1.health}')
-        print(f'Pokemon 2 Health: {self.poke2.health}')
+        print(f'{self.poke1.name} Health: {self.poke1.health}')
+        print(f'{self.poke2.name} Health: {self.poke2.health}')
         # initialize "next_move" as an empty string
         poke1_next_move = ''
         poke2_next_move = ''
@@ -44,10 +44,10 @@ class Battle:
             if random.random() < .25:
                 if self.poke1 == faster:
                     poke1_move = "Paralyzed"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
                 else:
                     poke2_move = "Paralyzed"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
 
         if "Sleep" in faster.start_status.keys():
             # sleep can run for 1-4 turns and the Pokemon cannot move during it
@@ -55,10 +55,10 @@ class Battle:
                 faster.start_status["Sleep"]["turns"] -= 1
                 if faster == self.poke1:
                     poke1_move = "Asleep"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
                 else:
                     poke2_move = "Asleep"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
 
         if "Freeze" in faster.start_status.keys():
             # there's a 20% chance of thawing and the Pokemon cannot move while frozen
@@ -67,10 +67,10 @@ class Battle:
             else:
                 if faster == self.poke1:
                     poke1_move = "Frozen"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
                 else:
                     poke2_move = "Frozen"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
 
         if "Confuse" in faster.start_status.keys():
             # Confuse can last 1-4 turns and has a 50% chance of having the user hurt themselves
@@ -79,28 +79,28 @@ class Battle:
             if random.random() < .5:
                 if faster == self.poke1:
                     poke1_move = "Confused"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
                 else:
                     poke2_move = "Confused"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
 
         if "Delayed" in faster.start_status.keys():
             # these moves will take place next turn, so we keep track of what they are for next turn
             if faster == self.poke1:
                 poke1_next_move = self.poke1.start_status["Delayed"]
                 poke1_move = "Delayed"
-                poke1_move = Move.blank
+                poke1_move = Battle.blank
             else:
                 poke2_next_move = self.poke1.start_status["Delayed"]
                 poke2_move = "Delayed"
-                poke2_move = Move.blank
+                poke2_move = Battle.blank
             del faster.start_status["Delayed"]
 
         # The faster Pokemon uses its move
         if faster == self.poke1:
             poke1_move.activate_move(faster, slower)
         else:
-            poke2_move.activare_move(faster, slower)
+            poke2_move.activate_move(faster, slower)
 
         # Check to see if either Pokemon fainted, ending the battle
         if faster.health <= 0:
@@ -118,10 +118,10 @@ class Battle:
             if random.random() < .25:
                 if slower == self.poke2:
                     poke2_move = "Paralyzed"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
                 else:
                     poke1_move = "Paralyzed"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
 
         if "Sleep" in slower.start_status.keys():
             # sleep lasts for 1-5 turns and the Pokemon can't move while inflicted
@@ -129,10 +129,10 @@ class Battle:
                 slower.start_status["Sleep"]["turns"] -= 1
                 if slower == self.poke2:
                     poke2_move == "Asleep"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
                 else:
                     poke1_move == "Asleep"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
 
         if "Freeze" in slower.start_status.keys():
             # has a 20% chance of thawing and the Pokemon cannot move while inflicted
@@ -141,10 +141,10 @@ class Battle:
             else:
                 if slower == self.poke2:
                     poke2_move = "Frozen"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
                 else:
                     poke1_move = "Frozen"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
 
         if "Confuse" in slower.start_status.keys():
             # can last 1-4 turns and has a 50% chance of the User hurting themselves
@@ -153,21 +153,21 @@ class Battle:
             if random.random() < .5:
                 if slower == self.poke2:
                     poke2_move = "Confused"
-                    poke2_move = Move.blank
+                    poke2_move = Battle.blank
                 else:
                     poke1_move = "Confused"
-                    poke1_move = Move.blank
+                    poke1_move = Battle.blank
 
         if "Delayed" in slower.start_status.keys():
             # these moves will take place next turn, so we keep track of what they are for next turn
             if slower == self.poke2:
                 poke2_next_move = self.poke2.start_status["Delayed"]
                 poke2_move = "Delayed"
-                poke2_move = Move.blank
+                poke2_move = Battle.blank
             else:
                 poke1_next_move = self.poke1.start_status["Delayed"]
                 poke1_move = "Delayed"
-                poke1_move = Move.blank
+                poke1_move = Battle.blank
             del slower.start_status["Delayed"]
 
 
@@ -175,10 +175,10 @@ class Battle:
             # if a Pokemon has the Flinch status they cannot move that turn
             if slower == self.poke2:
                 poke2_move = "Flinched"
-                poke2_move = Move.blank
+                poke2_move = Battle.blank
             else:
                 poke1_move = "Flinched"
-                poke1_move = Move.blank
+                poke1_move = Battle.blank
             del slower.start_status["Flinched"]
 
         # Have the slower Pokemon use its move
@@ -196,11 +196,15 @@ class Battle:
         # Check end of turn statuses for each Pokemon
         # At the end of the turn poison and burn both take away 1/16th of the
         # effected Pokemon's total hp
-        if "Burn" or "Poison" in self.poke1.end_status.keys():
-            self.poke1.health -= self.poke1.max_health // 16
+        if "Burn" in self.poke1.end_status.keys() or "Poison" in self.poke1.end_status.keys():
+            dmg = self.poke1.max_health // 16
+            self.poke1.health -= dmg
+            print(f'{self.poke1.name} took {dmg} damage from a status!')
 
-        if "Burn" or "Poison" in self.poke2.end_status.keys():
+        if "Burn" in self.poke2.end_status.keys() or "Poison" in self.poke2.end_status.keys():
+            dmg = self.poke1.max_health // 16
             self.poke2.health -= self.poke2.max_health // 16
+            print(f'{self.poke2.name} took {dmg} damage from a status!')
         '''
         # Check for badly poisoned which increases damage every turn it's inflicted
         if "Badly Poisoned" in self.poke1.end_status.keys():
@@ -221,6 +225,7 @@ class Battle:
             self.poke1.health += self.poke2.max_health / 16
         '''
 
+        print('---------------')
         # Check to see if either Pokemon Fainted, ending the battle
         if faster.health <= 0:
             print(slower.name, "Wins!")
@@ -228,7 +233,7 @@ class Battle:
         elif slower.health <= 0:
             print(faster.name, "Wins!")
             return slower
-        
+
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move
 
 
