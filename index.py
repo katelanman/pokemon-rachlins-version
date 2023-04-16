@@ -1,28 +1,35 @@
-from dash import html, dcc
+from dash import html, dcc, State
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
-
-# Connect to main app.py file
 from app import app
-
-# Connect to your app pages
 from pages import poke_choose, battle_page
-
-# Connect the navbar to the index
 from components import navbar
+from driver import pokemons
+from dash.exceptions import PreventUpdate
 
 # Define the navbar
 nav = navbar.Navbar()
 
 # Define the index page layout
 app.layout = html.Div([
+    dcc.Store(id='error', data=False),
     dcc.Location(id='url', refresh=False),
     nav,
     html.Div(id='page-content', children=[]),
+
+    dbc.Modal([
+        dbc.ModalHeader(
+            dbc.ModalTitle("Invalid Selection")
+        ),
+        dbc.ModalBody(children='Too many moves selected', id='error-message'),
+        dbc.ModalFooter()], id='select-error', is_open=False)
 ])
+
 
 # Create the callback to handle mutlipage inputs
 @app.callback(Output('page-content', 'children'),
-              [Input('url', 'pathname')])
+              Input('url', 'pathname')
+)
 def display_page(pathname):
     if pathname == '/':
         return poke_choose.layout
@@ -30,6 +37,45 @@ def display_page(pathname):
         return battle_page.layout
     else: # if redirected to unknown link
         return "404 Page Error! Please choose a link"
+
+
+# TODO: replace fake with real
+@app.callback(
+    Output('move-options', 'options'),
+    Input('pokemon-options', 'value')
+)
+def get_move_options(chosen):
+    options = []
+    if chosen:
+        for move in pokemons[chosen].moveset:
+            options.append(move)
+
+    return options
+
+@app.callback(
+    [Output('player-pokemon', 'data'),
+     Output('player-moves', 'data')],
+    [Input('start-game-button', 'n_clicks'),
+     Input('pokemon-options', 'value'),
+     Input('move-options', 'value')]
+)
+def pokemon_chosen(started, poke_choice, moves_choice):
+    if started:
+        return poke_choice, moves_choice
+
+    return PreventUpdate
+
+@app.callback(
+    [Output('start-game-button', 'disabled'),
+     Output('select-error', 'is_open')],
+    Input('move-options', 'value')
+)
+def enable_start(moves_chosen):
+    if moves_chosen > 4 or moves_chosen == 0:
+        return True, True
+    else:
+        return False, False
+
 
 # Run the app on localhost:8050
 if __name__ == '__main__':

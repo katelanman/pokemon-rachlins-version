@@ -160,9 +160,8 @@ layout = html.Div([
                                                          'fontSize': '16px'}),
             ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
 
-            # TODO: style bc it hates me ??
             dbc.Row([
-                html.P('hP:', style={'textIndent': '40px','fontWeight': 'bold'}),
+                html.P('hP:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Stats:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Status:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
                 html.P('Condition:', style={'textIndent': '40px', 'fontWeight': 'bold'})
