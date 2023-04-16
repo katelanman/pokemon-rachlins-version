@@ -9,15 +9,15 @@ pokemons = {} # {name: object}
 with open('./data/moves.csv', 'r', encoding='UTF8') as f:
     f.readline()
     for i in range(165):
-        line = f.readline().split(',')
+        line = f.readline().strip().split(',')
         line_move = Move(line)
         moves[line[1]] = line_move
 
 with open('./data/pokemon.csv', 'r', encoding='UTF8') as f:
     f.readline()
     for i in range(151):
-        line = f.readline().split(',')
-
+        line = f.readline().strip().split(',')
+        line[-1] = line[-1].replace('ThunderShock', 'Thunder Shock')
         line_poke = Pokemon(line)
         pokemons[line[1]] = line_poke
 
@@ -40,8 +40,8 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 # print(defender.name, defender.health)
 # print(attacker.name, attacker.health)
 
-a = pokemons['Charizard']
-b = pokemons['Venusaur']
+a = pokemons['Machop']
+b = pokemons['Abra']
 test_battle = Battle(a, b)
 
 while a.health > 0 and b.health > 0:
