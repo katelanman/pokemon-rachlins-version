@@ -10,12 +10,9 @@ fake_dict = {'move1': 1, 'move2': 2, 'move3': 3, 'move4': 4}
 pokemon = ""
 moves = []
 
-
-app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+# app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 layout = html.Div([
-		dcc.Store(id="player-pokemon", storage_type="session"),
-		dcc.Store(id="player-moves", storage_type="session"),
 		html.Div([
 			html.Div([
 				html.H1("Welcome to Pokemon Showdown")
