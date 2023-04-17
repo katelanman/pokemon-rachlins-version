@@ -13,6 +13,8 @@ nav = navbar.Navbar()
 # Define the index page layout
 app.layout = html.Div([
     dcc.Store(id='error', data=False),
+    dcc.Store(id="player-pokemon", storage_type="session"),
+    dcc.Store(id="player-moves", storage_type="session"),
     dcc.Location(id='url', refresh=False),
     nav,
     html.Div(id='page-content', children=[]),
@@ -80,6 +82,62 @@ def enable_start(moves_chosen):
         return False, False
 
     return True, False
+
+
+# TODO: get opponent name
+@app.callback(
+    [Output('opponent-name', 'children'),
+     Output('player-name', 'children'),
+     Output('move-header', 'children'),
+     Output('player-describe', 'children'),
+     Output('opponent-describe', 'children')],
+    Input('player-pokemon', 'data')
+)
+def add_names(player_name):
+    return player_name, player_name, f'What will {player_name} do?', \
+           player_name, player_name
+
+
+# TODO: opponent sprite
+@app.callback(
+    [Output('player-sprite', 'src'),
+     Output('opponent-sprite', 'src')],
+    Input('player-pokemon', 'data')
+)
+def get_sprites(player_name):
+    return pokemons[player_name].picture, pokemons[player_name].picture
+
+
+@app.callback(
+    [Output('move-1', 'children'),
+     Output('move-2', 'children'),
+     Output('move-3', 'children'),
+     Output('move-4', 'children')],
+    Input('player-moves', 'data')
+)
+def get_moves(moves):
+    blank = 4 - len(moves)
+    moves = moves + ['NO MOVE'] * blank
+    return moves
+
+
+@app.callback(
+    [Output('move-2', 'disabled'),
+     Output('move-3', 'disabled'),
+     Output('move-4', 'disabled')],
+    [Input('move-2', 'children'),
+     Input('move-3', 'children'),
+     Input('move-4', 'children')]
+)
+def disable_moves(move2, move3, move4):
+    i = 0
+    for move in [move2, move3, move4]:
+        if move == 'NO MOVE':
+            return [False] * i + [True] * (3 - i)
+
+        i += 1
+
+    return [False] * 3
 
 
 # Run the app on localhost:8050
