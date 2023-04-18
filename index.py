@@ -80,7 +80,6 @@ def get_move_options(chosen):
     if chosen:
         for move in pokemons[chosen].moveset:
             options.append(move)
-    print(options)
 
     return options
 
