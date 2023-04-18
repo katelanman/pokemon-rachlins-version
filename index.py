@@ -195,8 +195,9 @@ def disable_moves(move2, move3, move4):
 )
 def exchange_damage(move2, poke1, poke2):
     # if battle.faster == poke1:
-        dif = calc_damage(poke1, poke2)
-        poke2.health
+        dif2 = calc_damage(poke1, poke2)
+        poke2.health -= dif
+
 
 
 

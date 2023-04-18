@@ -228,11 +228,11 @@ class Battle:
 
         print('---------------')
         # Check to see if either Pokemon Fainted, ending the battle
-        if faster.health <= 0:
-            print(slower.name, "Wins!")
-            return faster
-        elif slower.health <= 0:
-            print(faster.name, "Wins!")
-            return slower
+        if self.faster.health <= 0:
+            print(self.slower.name, "Wins!")
+            return self.faster
+        elif self.slower.health <= 0:
+            print(self.faster.name, "Wins!")
+            return self.slower
 
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move

@@ -81,7 +81,7 @@ def read_moves(url, num_moves = 165):
     # Creates csv housing data for easy object creation
     print('Writing csv!')
     header = ['Index', 'Name', 'Type', 'Category', 'PP', 'Power', 'Accuracy', 'Desc', 'Link']
-    with open('moves.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('data/moves.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(data)
@@ -110,9 +110,10 @@ def read_pokemon(url):
 
     html = requests.get('https://www.pokencyclopedia.info/en/index.php?id=sprites/gen5/ani_black-white').text
     soup = BeautifulSoup(html, 'lxml')
-    test = soup.find_all('img', {'alt': lambda L: L and L.startswith('#')})
+    test = soup.find_all('table', {'class': 'spr'})
     for t in test:
-        images.append('https://www.pokencyclopedia.info' + t['src'][2:])
+        m = t.find('img')
+        images.append('https://www.pokencyclopedia.info' + m['src'][2:])
 
     # Scrapes master link to get all pokemon names
     html = requests.get(url).text
@@ -174,11 +175,11 @@ def read_pokemon(url):
     print('Writing csv!')
     header = ['Pokedex', 'Name', 'Types', 'Health', 'Attack', 'Defense',
               'Special Attack', 'Special Defense', 'Speed', 'Movesets', 'Image']
-    with open('pokemon.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('data/pokemon.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(data)
     print('Done!')
 
-read_moves(MOVES_URL)
-# read_pokemon(POKEMON_URL)
+# read_moves(MOVES_URL)
+read_pokemon(POKEMON_URL)

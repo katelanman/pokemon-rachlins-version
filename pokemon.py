@@ -102,4 +102,4 @@ class Pokemon():
         for move in self.actual_moves:
             move_dmg[move] = moves[move].calc_damage(self, defender)
         if random.random() <= .25:
-        
+            pass
