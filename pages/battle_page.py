@@ -1,13 +1,7 @@
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
-import pandas as pd
-import base64
-from pages.poke_choose import pokemon
+# from pages.poke_choose import pokemon
 
-# app = Dash(__name__)
-# app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-#
-# server = app.server
 
 layout = html.Div([
     # col 1 - left side game interface
@@ -20,13 +14,15 @@ layout = html.Div([
                     html.Div([
                         # TODO: get pokemon name
                         html.H3('Pokemon Name', id='opponent-name',
-                                style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw'}),
+                                style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
+                                       'fontSize': '25px', 'fontFamily': 'impact',
+                                       '-webkit-text-stroke-width': '.5px', '-webkit-text-stroke-color': '#e4e4e4'}),
 
                         # TODO: function to change HP after damage (should be able to just adjust width of
                         #  green box --> i made it so we can just use the % health as width fingers crossed it works)
                         # hp box
                         html.Div([
-                            html.H4('HP', style={'margin': '3px'}),
+                            html.H4('HP', style={'margin': '1px 3px', 'fontSize': '2vh'}),
                             html.Div([
                                 html.Div([], style={'width': '100%', 'height': '100%', 'backgroundColor': 'green'})
                             ], style={'width': '80%', 'height': '60%', 'backgroundColor': 'white',
@@ -40,7 +36,7 @@ layout = html.Div([
                                   'borderLeft': '1px solid #E4E4E4'})
 
                     ], style={'width': '35%', 'height': '35%', 'backgroundColor': '#96c23c', 'float': 'left',
-                              'left': '0%', 'top': '20%', 'position': 'absolute'}),
+                              'left': '0%', 'top': '20%', 'position': 'absolute', 'borderRadius': '0 3px 3px 0'}),
 
                     # TODO: change images based on user pokemon
                     html.Img(src='https://img.pokemondb.net/sprites/black-white/anim/shiny/snorlax.gif',
@@ -60,29 +56,32 @@ layout = html.Div([
                     html.Div([
                         # TODO: pokemon name
                         html.H3('Pokemon Name', id='player-name',
-                                style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw'}),
+                                style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
+                                       'fontSize': '25px', 'fontFamily': 'impact',
+                                       '-webkit-text-stroke-width': '.5px', '-webkit-text-stroke-color': '#e4e4e4'}),
 
                         # TODO: implement damage taken fn here
                         # hp box
                         html.Div([
-                            html.H4('HP', style={'margin': '3px', 'opacity': '1'}),
+                            html.H4('HP', style={'margin': '1px 3px', 'fontSize': '2vh'}),
                             html.Div([
-                                html.Div([], style={'width': '100%', 'height': '100%', 'backgroundColor': 'green'})
+                                html.Div([], style={'width': '100%', 'height': '100%', 'backgroundColor': 'green',
+                                                    'borderRadius': '3px'})
                             ], style={'width': '80%', 'height': '60%', 'backgroundColor': 'white',
                                       'position': 'absolute', 'top': '20%', 'left': '18%',
                                       'border': '1px solid #919191', 'borderTop': '1px solid #E4E4E4',
-                                      'borderLeft': '1px solid #E4E4E4'})
+                                      'borderLeft': '1px solid #E4E4E4', 'borderRadius': '3px'})
 
                         ], style={'width': '60%', 'height': '30%', 'marginTop': '5vh', 'marginLeft': '6.7vw',
                                   'backgroundColor': '#C2C2C2', 'position': 'relative',
                                   'border': '1.5px solid #919191', 'borderTop': '1px solid #E4E4E4',
-                                  'borderLeft': '1px solid #E4E4E4'})
+                                  'borderLeft': '1px solid #E4E4E4', 'borderRadius': '3px'})
 
                     ], style={'width': '35%', 'height': '35%', 'backgroundColor': '#96c23c', 'float': 'left',
-                              'right': '0%', 'top': '30%', 'position': 'absolute'})
+                              'right': '0%', 'top': '30%', 'position': 'absolute', 'borderRadius': '3px 0 0 3px'})
             ], style={'height': '50%', 'position': 'relative'})
-        ], style={'height': '60vh', 'backgroundColor': 'olivedrab', 'border': '2px solid green',
-                  'borderTop': '2px solid yellowgreen', 'borderLeft': '2px solid yellowgreen'}),
+        ], style={'height': '50vh', 'backgroundColor': 'olivedrab', 'border': '2px solid green',
+                  'borderTop': '2px solid yellowgreen', 'borderLeft': '2px solid yellowgreen', 'margin': '10px'}),
 
         html.Div([
             # TODO: get player pokemon name
@@ -112,7 +111,7 @@ layout = html.Div([
                 ], style={'width': '50%', 'float': 'left'})
             ], style={'height': '30vh', 'justifyContent': 'center'})
         ], style={'backgroundColor': '#EEEEEE', 'border': '2px solid #E4E4E4', 'borderLeft': '2px solid #C2C2C2',
-                  'borderTop': '2px solid #C2C2C2', 'marginTop': '1vh'})
+                  'borderTop': '2px solid #C2C2C2', 'margin': '10px'})
     ], style={'width': '55vw', 'height': '98vh', 'float': 'left'}),
 
     # col 2 - right side descriptions
@@ -141,10 +140,10 @@ layout = html.Div([
             ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
 
             dbc.Row([
-                html.P('hP:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Stats:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Status:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Condition:', style={'textIndent': '40px', 'fontWeight': 'bold'})
+                html.P('hP:', id='player-hp', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Stats:', id='player-stats', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Status:', id='player-status', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Condition:', id='player-cond', style={'textIndent': '40px', 'fontWeight': 'bold'})
             ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
 
         ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
@@ -162,53 +161,17 @@ layout = html.Div([
 
             # TODO: style bc it hates me ??
             dbc.Row([
-                html.P('hP:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Stats:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Status:', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Condition:', style={'textIndent': '40px', 'fontWeight': 'bold'})
+                html.P('hP:', id='opp-hp', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Stats:', id='opp-stats', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Status:', id='opp-status', style={'textIndent': '40px', 'fontWeight': 'bold'}),
+                html.P('Condition:', id='opp-cond', style={'textIndent': '40px', 'fontWeight': 'bold'})
             ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
 
         ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
                   'margin': '2.5%', 'position': 'relative'}),
 
     # TODO: website font
-    ], style={'width': '40vw', 'height': '98vh', 'float': 'left', 'backgroundColor': '#EEEEEE',
-              'marginLeft': '1vh', 'border': '2px solid #E4E4E4', 'borderLeft': '2px solid #C2C2C2',
+    ], style={'width': '40vw', 'height': '88vh', 'float': 'left', 'backgroundColor': '#EEEEEE',
+              'margin': '10px', 'border': '2px solid #E4E4E4', 'borderLeft': '2px solid #C2C2C2',
               'borderTop': '2px solid #C2C2C2'})
 ], style={'backgroundColor': '#FCFCFC', 'color': '#313131'})
-
-
-'''
-@app.callback()
-def get_move():
-    # somehow get specific moves that player chose
-    pass
-
-@app.callback(
-    # TODO: determine output
-    Input('move-1', 'n-clicks'),
-    Input('move-2', 'n-clicks'),
-    Input('move-3', 'n-clicks'),
-    Input('move-4', 'n-clicks')
-)
-def execute_move(move1, move2, move3, move4):
-    # disable n clicks for all buttons (to enable after move carried out)
-    # figure out which move made
-    # somehow do damage etc (update status of targeted pokemon)
-    pass
-    
-'''
-
-# @app.callback(
-#     Output("new-game-selection", "is_open"),
-#     [Input("new-game", "n_clicks")], #Input("start-game", "n_clicks")],
-#     [State("new-game-selection", "is_open")],
-# )
-# def toggle_modal(n_open, is_open):
-#     if n_open:# or n_close:
-#         return not is_open
-#     return is_open
-
-
-# if __name__ == "__main__":
-#     app.run_server(debug=True)
