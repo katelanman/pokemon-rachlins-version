@@ -31,7 +31,7 @@ def read_moves(url, num_moves = 165):
     moves = soup.find_all('a', {'title': lambda L: L and L.endswith('(move)')})
     for move in moves:
         links.append('https://bulbapedia.bulbagarden.net/wiki/' + move['href'][6:])
-        names.append(move['title'][:-7])
+        names.append(move['title'][:-7].replace(" ", ""))
 
     for i in range(num_moves + 1):
         # Scrapes sublink for info on a single move
@@ -106,6 +106,13 @@ def read_pokemon(url):
     speed = []
     movesets = []
     types = []
+    images = []
+
+    html = requests.get('https://www.pokencyclopedia.info/en/index.php?id=sprites/gen5/ani_black-white').text
+    soup = BeautifulSoup(html, 'lxml')
+    test = soup.find_all('img', {'alt': lambda L: L and L.startswith('#')})
+    for t in test:
+        images.append('https://www.pokencyclopedia.info' + t['src'][2:])
 
     # Scrapes master link to get all pokemon names
     html = requests.get(url).text
@@ -152,7 +159,7 @@ def read_pokemon(url):
             moves = table.find_all('td', {'class': 'cell-name'})
             for move in moves:
                 if move.text not in moveset:
-                    moveset.append(move.text)
+                    moveset.append(move.text.replace(" ", ''))
         moveset = ';'.join(moveset)
         movesets.append(moveset)
 
@@ -161,17 +168,17 @@ def read_pokemon(url):
     data = []
     for i in range(len(names)):
         data.append([i + 1, names[i], types[i], health[i], attack[i], defense[i],
-                     spatt[i], spdef[i], speed[i], movesets[i]])
+                     spatt[i], spdef[i], speed[i], movesets[i], images[i]])
 
     # Creates csv housing data for easy object creation
     print('Writing csv!')
     header = ['Pokedex', 'Name', 'Types', 'Health', 'Attack', 'Defense',
-              'Special Attack', 'Special Defense', 'Speed', 'Movesets']
+              'Special Attack', 'Special Defense', 'Speed', 'Movesets', 'Image']
     with open('pokemon.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
         writer.writerows(data)
     print('Done!')
 
-# read_moves(MOVES_URL)
+read_moves(MOVES_URL)
 # read_pokemon(POKEMON_URL)

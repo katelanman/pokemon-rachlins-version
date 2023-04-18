@@ -53,8 +53,9 @@ class Pokemon():
         self.actual_moves = self.moveset[:4]
         self.start_status = {}
         self.end_status = {}
-        self.picture = ''
+        self.picture = stats[-1]
         self.max_health = self.health
+
 
     def get_stat(self, stat):
         """
