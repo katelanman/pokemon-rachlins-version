@@ -1,6 +1,7 @@
-
 import math
 import random
+
+
 class Pokemon():
     """
     Pokemon object that represents a Pokemon from Gen 1 to use in fresh battles
@@ -41,12 +42,12 @@ class Pokemon():
         self.name = stats[1]
         self.lv = lv
         self.types = stats[2].split(';')
-        self.health = math.floor((int(stats[3]) * 2 * self.lv)/100 + self.lv + 10)
-        self.attack = math.floor((int(stats[4]) * 2 * self.lv)/100 + 5)
+        self.health = math.floor((int(stats[3]) * 2 * self.lv) / 100 + self.lv + 10)
+        self.attack = math.floor((int(stats[4]) * 2 * self.lv) / 100 + 5)
         self.defense = math.floor((int(stats[5]) * 2 * self.lv) / 100 + 5)
-        self.spattack = math.floor((int(stats[6]) * 2 * self.lv)/ 100 + 5)
-        self.spdefense = math.floor((int(stats[7]) * 2 * self.lv)/ 100 + 5)
-        self.speed = math.floor((int(stats[8]) * 2 * self.lv)/ 100 + 5)
+        self.spattack = math.floor((int(stats[6]) * 2 * self.lv) / 100 + 5)
+        self.spdefense = math.floor((int(stats[7]) * 2 * self.lv) / 100 + 5)
+        self.speed = math.floor((int(stats[8]) * 2 * self.lv) / 100 + 5)
         self.accuracy = 1.0
         self.evasion = 1.0
         self.moveset = stats[9].split(';')
@@ -55,7 +56,6 @@ class Pokemon():
         self.end_status = {}
         self.picture = stats[-1]
         self.max_health = self.health
-
 
     def get_stat(self, stat):
         """
@@ -98,8 +98,28 @@ class Pokemon():
         return random.sample(self.actual_moves, 1)[0]
 
     def pick_move(self, defender, moves):
+
         move_dmg = {}
         for move in self.actual_moves:
             move_dmg[move] = moves[move].calc_damage(self, defender)
-        if random.random() <= .25:
-            pass
+
+        status_moves = []
+        for move in move_dmg:
+            if move_dmg[move] == 0:
+                status_moves.append(move)
+
+        max_dmg = max(move_dmg.values())
+        for move in move_dmg:
+            if move_dmg[move] == max_dmg:
+                strongest = move
+
+        if len(status_moves) >= 1:
+            if len(defender.start_status) == 0:
+                if random.random() <= .5:
+                    return random.choice(status_moves)
+                else:
+                    return strongest
+            else:
+                return strongest
+        else:
+            return strongest

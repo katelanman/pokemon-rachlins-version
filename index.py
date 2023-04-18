@@ -5,7 +5,7 @@ from app import app
 from pages import poke_choose, battle_page
 from components import navbar
 from driver import pokemons
-from move import calc_damage
+from move import Move
 from dash.exceptions import PreventUpdate
 
 # Define the navbar
@@ -186,6 +186,8 @@ def disable_moves(move2, move3, move4):
     return [True if move == 'NO MOVE' else False for move in [move2, move3, move4]]
 
 
+# TODO: tbh i don't know how this is gonna work with the move class and. okay i am decidedly wrong about everyint
+# i dont know how the move and battle classes work well enough apparently
 @app.callback(
     [Output( ),
      ],
@@ -197,6 +199,7 @@ def exchange_damage(move2, poke1, poke2):
     # if battle.faster == poke1:
         dif2 = calc_damage(poke1, poke2)
         poke2.health -= dif
+
 
 
 

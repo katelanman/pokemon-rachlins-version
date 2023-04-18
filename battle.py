@@ -23,10 +23,10 @@ class Battle:
 
         # check paralysis on both Pokemon since it affects speed and therefore who goes first
         if "Paralyze" in self.poke1.start_status.keys():
-            self.poke1.speed = self.poke1.speed // 4
+            self.poke1.speed = self.poke1.speed // 2
 
         if "Paralyze" in self.poke2.start_status.keys():
-            self.poke2.speed = self.poke2.speed // 4
+            self.poke2.speed = self.poke2.speed // 2
 
         # define a faster and slower Pokemon to determine which one goes first
         if self.poke1.speed >= self.poke2.speed:

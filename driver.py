@@ -39,19 +39,17 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 # print(defender.name, defender.health)
 # print(attacker.name, attacker.health)
 
-a = pokemons['Lickitung']
-b = pokemons['Abra']
+a = pokemons['Gastly']
+b = pokemons['Mewtwo']
 test_battle = Battle(a, b)
-a.pick_move(b, moves)
 
 while a.health > 0 and b.health > 0:
-    move_1 = moves[a.choose_random_move()]
-    move_2 = moves[b.choose_random_move()]
+    move_1 = moves[a.pick_move(b, moves)]
+    move_2 = moves[b.pick_move(a, moves)]
     if type(move_1) == str:
         move_1 = moves['Blank']
     if type(move_2) == str:
         move_2 = moves['Blank']
-
     test_battle.round(move_1, move_2)
 
 # a = pokemons['Pikachu']
