@@ -7,23 +7,7 @@ from components import navbar
 from move import Move
 from pokemon import Pokemon
 from dash.exceptions import PreventUpdate
-
-moves = {} # {name: object}
-pokemons = {} # {name: object}
-
-with open('data/moves.csv', 'r', encoding='UTF8') as f:
-    f.readline()
-    for i in range(165):
-        line = f.readline().strip().split(',')
-        line_move = Move(line)
-        moves[line[1]] = line_move
-
-with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
-    f.readline()
-    for i in range(151):
-        line = f.readline().strip().split(',')
-        line_poke = Pokemon(line)
-        pokemons[line[1]] = line_poke
+from driver import moves, pokemons
 
 # Define the navbar
 nav = navbar.Navbar()
@@ -151,15 +135,12 @@ def enable_start(moves_chosen):
 @app.callback(
     [Output('opponent-name', 'children'),
      Output('player-name', 'children'),
-     Output('move-header', 'children'),
-     Output('player-describe', 'children'),
-     Output('opponent-describe', 'children')],
+     Output('move-header', 'children')],
     Input('player-pokemon', 'data')
 )
 def add_names(player_name):
     """ places selected pokemon names in interface page """
-    return player_name, player_name, f'What will {player_name} do?', \
-           player_name, player_name
+    return player_name, player_name, f'What will {player_name} do?'
 
 
 # TODO: opponent sprite
@@ -171,6 +152,31 @@ def add_names(player_name):
 def get_sprites(player_name):
     """ places selected pokemon sprites in interface page """
     return pokemons[player_name].picture, pokemons[player_name].picture
+
+
+@app.callback(
+    [Output('player-describe', 'children'),
+     Output('player-types', 'children'),
+     Output('player-hp', 'children'),
+     Output('player-status', 'children'),
+     Output('player-speed', 'children'),
+     Output('player-attack', 'children'),
+     Output('player-defense', 'children'),
+     Output('player-spattack', 'children'),
+     Output('player-spdefense', 'children')],
+    Input('player-pokemon', 'data')
+)
+def player_stat_box(player_name):
+    pokemon = pokemons[player_name]
+    status = 'None'
+
+    if list(pokemon.start_status.keys()) + list(pokemon.end_status.keys()):
+        ls = list(pokemon.start_status.keys()) + list(pokemon.end_status.keys())
+        status = ls[0]
+
+    return player_name, pokemon.types, 'hP: ' + str(pokemon.health), 'Status Condition: ' + status, \
+           'Speed: ' + str(pokemon.speed), 'Attack: ' + str(pokemon.attack), 'Defense: ' + str(pokemon.defense), \
+           'Special Attack: ' + str(pokemon.spattack), 'Special Defense: ' + str(pokemon.spdefense)
 
 
 @app.callback(

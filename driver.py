@@ -10,7 +10,8 @@ with open('data/moves.csv', 'r', encoding='UTF8') as f:
     f.readline()
     for i in range(165):
         line = f.readline().strip().split(',')
-        line_move = Move(line)
+        if line[1] != 'Mist':
+            line_move = Move(line)
         moves[line[1]] = line_move
 
 with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
@@ -39,12 +40,19 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 # print(defender.name, defender.health)
 # print(attacker.name, attacker.health)
 
-a = pokemons['Gastly']
-b = pokemons['Mewtwo']
+a = pokemons['Mewtwo']
+b = pokemons['Gastly']
 
 test_battle = Battle(a, b)
+c = a.get_opponents(pokemons)
+print(c)
+opp = a.random_opp(c, pokemons)
+print("opp name:", opp, "type:", type(opp))
 
-while a.health > 0 and b.health > 0:
+print("opp moves:", a.choose_moves(b, moves))
+
+
+"""while a.health > 0 and b.health > 0:
     move_1 = moves[a.pick_move(b, moves)]
     move_2 = moves[b.pick_move(a, moves)]
     if type(move_1) == str:
@@ -53,7 +61,7 @@ while a.health > 0 and b.health > 0:
         move_2 = moves['Blank']
     test_battle.round(move_1, move_2)
 
-print(test_battle.log)
+print(test_battle.log)"""
 
 # a = pokemons['Pikachu']
 # b = pokemons['Abra']
