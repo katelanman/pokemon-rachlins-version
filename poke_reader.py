@@ -76,7 +76,8 @@ def read_moves(url, num_moves = 165):
     print('Sorting!')
     data = []
     for i in range(num_moves):
-        data.append([i, names[i], types[i], categories[i], pp[i], power[i], accuracy[i], desc[i], links[i]])
+        data.append([i, names[i], types[i], categories[i], pp[i], power[i],
+                     accuracy[i], desc[i], links[i]], names[i].lower())
 
     # Creates csv housing data for easy object creation
     print('Writing csv!')
@@ -170,7 +171,7 @@ def read_pokemon(url):
     data = []
     for i in range(len(names)):
         data.append([i + 1, names[i], types[i], health[i], attack[i], defense[i],
-                     spatt[i], spdef[i], speed[i], movesets[i], images[i]])
+                     spatt[i], spdef[i], speed[i], movesets[i], images[i], names[i].lower()])
 
     # Creates csv housing data for easy object creation
     print('Writing csv!')
@@ -182,5 +183,5 @@ def read_pokemon(url):
         writer.writerows(data)
     print('Done!')
 
-# read_moves(MOVES_URL)
+read_moves(MOVES_URL)
 read_pokemon(POKEMON_URL)
