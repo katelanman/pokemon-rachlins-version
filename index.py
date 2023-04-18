@@ -5,6 +5,7 @@ from app import app
 from pages import poke_choose, battle_page
 from components import navbar
 from driver import pokemons
+from move import calc_damage
 from dash.exceptions import PreventUpdate
 
 # Define the navbar
@@ -183,6 +184,23 @@ def get_moves(moves):
 def disable_moves(move2, move3, move4):
     """ disable inactive moves (when less than 4 moves have been selected) """
     return [True if move == 'NO MOVE' else False for move in [move2, move3, move4]]
+
+
+@app.callback(
+    [Output( ),
+     ],
+    [Input('move-2', ''),
+     Input('player-pokemon', ''),
+     Input('opponent-pokemon', '')]
+)
+def exchange_damage(move2, poke1, poke2):
+    # if battle.faster == poke1:
+        dif = calc_damage(poke1, poke2)
+        poke2.health
+
+
+
+
 
 
 # Run the app on localhost:8050

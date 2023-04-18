@@ -97,3 +97,9 @@ class Pokemon():
     def choose_random_move(self):
         return random.sample(self.actual_moves, 1)[0]
 
+    def pick_move(self, defender, moves):
+        move_dmg = {}
+        for move in self.actual_moves:
+            move_dmg[move] = moves[move].calc_damage(self, defender)
+        if random.random() <= .25:
+        

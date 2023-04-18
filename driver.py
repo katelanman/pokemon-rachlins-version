@@ -40,9 +40,10 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 # print(defender.name, defender.health)
 # print(attacker.name, attacker.health)
 
-a = pokemons['Machop']
+a = pokemons['Lickitung']
 b = pokemons['Abra']
 test_battle = Battle(a, b)
+a.pick_move(b, moves)
 
 while a.health > 0 and b.health > 0:
     move_1 = moves[a.choose_random_move()]
