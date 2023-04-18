@@ -41,6 +41,7 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 
 a = pokemons['Gastly']
 b = pokemons['Mewtwo']
+
 test_battle = Battle(a, b)
 
 while a.health > 0 and b.health > 0:
@@ -51,6 +52,8 @@ while a.health > 0 and b.health > 0:
     if type(move_2) == str:
         move_2 = moves['Blank']
     test_battle.round(move_1, move_2)
+
+print(test_battle.log)
 
 # a = pokemons['Pikachu']
 # b = pokemons['Abra']

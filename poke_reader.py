@@ -31,7 +31,7 @@ def read_moves(url, num_moves = 165):
     moves = soup.find_all('a', {'title': lambda L: L and L.endswith('(move)')})
     for move in moves:
         links.append('https://bulbapedia.bulbagarden.net/wiki/' + move['href'][6:])
-        names.append(move['title'][:-7].replace(" ", ""))
+        names.append(move['title'][:-7].replace(" ", "").replace('-', ''))
 
     for i in range(num_moves + 1):
         # Scrapes sublink for info on a single move
@@ -160,7 +160,8 @@ def read_pokemon(url):
             moves = table.find_all('td', {'class': 'cell-name'})
             for move in moves:
                 if move.text not in moveset:
-                    moveset.append(move.text.replace(" ", ''))
+                    moveset.append(move.text.replace(" ", '').replace('-', ''))
+        moveset = list(set(moveset))
         moveset = ';'.join(moveset)
         movesets.append(moveset)
 

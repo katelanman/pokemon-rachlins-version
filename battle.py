@@ -12,11 +12,14 @@ class Battle:
         self.poke2 = poke2
         self.faster = poke1
         self.slower = poke2
+        self.log = ''
+        poke1.wipe()
+        poke2.wipe()
 
     def round(self, poke1_move, poke2_move):
 
-        print(f'{self.poke1.name} Health: {self.poke1.health}')
-        print(f'{self.poke2.name} Health: {self.poke2.health}')
+        self.log += f'{self.poke1.name} Health: {self.poke1.health}\n'
+        self.log += f'{self.poke2.name} Health: {self.poke2.health}\n'
         # initialize "next_move" as an empty string
         poke1_next_move = ''
         poke2_next_move = ''
@@ -100,15 +103,17 @@ class Battle:
 
         # The faster Pokemon uses its move
         if self.faster == self.poke1:
-            poke1_move.activate_move(self.faster, self.slower)
+            self.log += poke1_move.activate_move(self.faster, self.slower)
         else:
-            poke2_move.activate_move(self.faster, self.slower)
+            self.log += poke2_move.activate_move(self.faster, self.slower)
 
         # Check to see if either Pokemon fainted, ending the battle
         if self.faster.health <= 0:
-            return print(self.slower.name, "Wins!")
+            self.log += str(self.slower.name) + " Wins!\n"
+            return self.slower
         elif self.slower.health <= 0:
-            return print(self.faster.name, "Wins!")
+            self.log += str(self.faster.name) + " Wins!\n"
+            return self.faster
 
         # Check the Slower Pokemon's starting Status
         if "Burn" in self.slower.start_status.keys():
@@ -184,15 +189,17 @@ class Battle:
 
         # Have the slower Pokemon use its move
         if self.slower == self.poke1:
-            poke1_move.activate_move(self.slower, self.faster)
+            self.log += poke1_move.activate_move(self.slower, self.faster)
         else:
-            poke2_move.activate_move(self.slower, self.faster)
+            self.log += poke2_move.activate_move(self.slower, self.faster)
 
         # Check to see if either Pokemon Fainted, ending the battle
         if self.faster.health <= 0:
-            return print(self.slower.name, "Wins!")
+            self.log += str(self.slower.name) + " Wins!\n"
+            return self.slower
         elif self.slower.health <= 0:
-            return print(self.faster.name, "Wins!")
+            self.log += str(self.faster.name) + " Wins!\n"
+            return self.faster
 
         # Check end of turn statuses for each Pokemon
         # At the end of the turn poison and burn both take away 1/16th of the
@@ -200,12 +207,12 @@ class Battle:
         if "Burn" in self.poke1.end_status.keys() or "Poison" in self.poke1.end_status.keys():
             dmg = self.poke1.max_health // 16
             self.poke1.health -= dmg
-            print(f'{self.poke1.name} took {dmg} damage from a status!')
+            self.log += f'{self.poke1.name} took {dmg} damage from a status!\n'
 
         if "Burn" in self.poke2.end_status.keys() or "Poison" in self.poke2.end_status.keys():
             dmg = self.poke1.max_health // 16
             self.poke2.health -= self.poke2.max_health // 16
-            print(f'{self.poke2.name} took {dmg} damage from a status!')
+            self.log += f'{self.poke2.name} took {dmg} damage from a status!\n'
         '''
         # Check for badly poisoned which increases damage every turn it's inflicted
         if "Badly Poisoned" in self.poke1.end_status.keys():
@@ -226,13 +233,13 @@ class Battle:
             self.poke1.health += self.poke2.max_health / 16
         '''
 
-        print('---------------')
+        self.log += '---------------\n'
         # Check to see if either Pokemon Fainted, ending the battle
         if self.faster.health <= 0:
-            print(self.slower.name, "Wins!")
-            return self.faster
-        elif self.slower.health <= 0:
-            print(self.faster.name, "Wins!")
+            self.log += str(self.slower.name) + " Wins!\n"
             return self.slower
+        elif self.slower.health <= 0:
+            self.log += str(self.faster.name) + " Wins!\n"
+            return self.faster
 
         return self.poke1, self.poke2, poke1_next_move, poke2_next_move

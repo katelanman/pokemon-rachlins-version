@@ -4,9 +4,26 @@ from dash.dependencies import Input, Output
 from app import app
 from pages import poke_choose, battle_page
 from components import navbar
-from driver import pokemons
 from move import Move
+from pokemon import Pokemon
 from dash.exceptions import PreventUpdate
+
+moves = {} # {name: object}
+pokemons = {} # {name: object}
+
+with open('data/moves.csv', 'r', encoding='UTF8') as f:
+    f.readline()
+    for i in range(165):
+        line = f.readline().strip().split(',')
+        line_move = Move(line)
+        moves[line[1]] = line_move
+
+with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
+    f.readline()
+    for i in range(151):
+        line = f.readline().strip().split(',')
+        line_poke = Pokemon(line)
+        pokemons[line[1]] = line_poke
 
 # Define the navbar
 nav = navbar.Navbar()
@@ -63,6 +80,7 @@ def get_move_options(chosen):
     if chosen:
         for move in pokemons[chosen].moveset:
             options.append(move)
+    print(options)
 
     return options
 
@@ -188,23 +206,18 @@ def disable_moves(move2, move3, move4):
 
 # TODO: tbh i don't know how this is gonna work with the move class and. okay i am decidedly wrong about everyint
 # i dont know how the move and battle classes work well enough apparently
-@app.callback(
-    [Output( ),
-     ],
-    [Input('move-2', ''),
-     Input('player-pokemon', ''),
-     Input('opponent-pokemon', '')]
-)
-def exchange_damage(move2, poke1, poke2):
-    # if battle.faster == poke1:
-        dif2 = calc_damage(poke1, poke2)
-        poke2.health -= dif
-
-
-
-
-
-
+# @app.callback(
+#     [Output( ),
+#      ],
+#     [Input('move-2', ''),
+#      Input('player-pokemon', ''),
+#      Input('opponent-pokemon', '')]
+# )
+#
+# def exchange_damage(move2, poke1, poke2):
+#     # if battle.faster == poke1:
+#         dif2 = calc_damage(poke1, poke2)
+#         poke2.health -= dif
 
 
 # Run the app on localhost:8050

@@ -223,6 +223,7 @@ class Move:
         :param defender (Pokemon: Pokemon object being hit by move
         :return damage (int): Damage that move will do
         """
+        log = ''
 
         # Checks category. If status, immediately checks for status procs and returns 0
         if self.cat == 'Physical':
@@ -232,17 +233,17 @@ class Move:
             a = attacker.spattack
             d = defender.spdefense
         else:
-            self.check_status(attacker, defender)
-            return 0
+            log += self.check_status(attacker, defender)
+            return 0, log
 
         # Checks if move connects, and whether it takes crash damage
         hit_check = self.acc * attacker.accuracy / defender.evasion
         if random.random() > hit_check:
-            print('It missed!')
+            log += 'It missed!\n'
             if 'Crash' in self.effects:
-                print(f'{attacker.name} took 1 HP of crash damage!')
+                log += f'{attacker.name} took 1 HP of crash damage!\n'
                 attacker.health -= 1
-            return 0
+            return 0, log
 
         # Checks for critical chance
         crit_check = random.randint(0, 255)
@@ -251,7 +252,7 @@ class Move:
             crit_check = int(crit_check / 8)
         if crit_check < int(attacker.speed / 2):
             crit = 2
-            print('Critical!')
+            log += 'Critical!\n'
 
         # Calculates damage using formula, accounts for STAB / type advantage
         damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a/d)/50 + 2)
@@ -269,10 +270,10 @@ class Move:
         # Final damage calculations and checks for status proc
         damage *= random.randint(217, 255)/255
         damage = int(damage)
-        print(f'{damage} damage dealt!')
-        self.check_status(attacker, defender)
+        log += f'{damage} damage dealt!\n'
+        log += self.check_status(attacker, defender)
 
-        return damage
+        return damage, log
 
     def check_status(self, attacker, defender):
         """
@@ -284,19 +285,20 @@ class Move:
         :param defender (Pokemon: Pokemon object being hit by move
         :return: None
         """
+        log = ''
 
         # Checks if the move procs Burn
         if 'Burn' in self.effects and 'chance' in self.effects['Burn']:
             if 'Freeze' in defender.start_status:
                 del defender.effects['Freeze']
-                print(f'{defender.name} thawed out!')
+                log += f'{defender.name} thawed out!\n'
             if random.random() < self.effects['Burn']['chance']:
                 if 'Fire' in defender.types:
-                    print(f'{defender.name} got burned, but they are immune!')
+                    log += f'{defender.name} got burned, but they are immune!\n'
                 elif 'Burn' in defender.start_status:
-                    print(f'{defender.name} got burned, but they are already burnt!')
+                    log += f'{defender.name} got burned, but they are already burnt!\n'
                 else:
-                    print(f'{defender.name} got burned!')
+                    log += f'{defender.name} got burned!\n'
                     defender.start_status['Burn'] = {}
                     defender.end_status['Burn'] = {}
 
@@ -304,45 +306,45 @@ class Move:
         if 'Poison' in self.effects and 'chance' in self.effects['Poison']:
             if random.random() < self.effects['Poison']['chance']:
                 if 'Poison' in defender.end_status:
-                    print(f'{defender.name} got poisoned, but they are already poisoned!')
+                    log += f'{defender.name} got poisoned, but they are already poisoned!\n'
                 else:
-                    print(f'{defender.name} got poisoned!')
+                    log += f'{defender.name} got poisoned!\n'
                     defender.end_status['Poison'] = {}
 
         # Checks if move procs Freeze
         if 'Freeze' in self.effects and 'chance' in self.effects['Freeze']:
             if random.random() < self.effects['Freeze']['chance']:
                 if 'Freeze' in defender.start_status:
-                    print(f'{defender.name} got frozen, but they are already frozen!')
+                    log += f'{defender.name} got frozen, but they are already frozen!\n'
                 else:
-                    print(f'{defender.name} got frozen!')
+                    log += f'{defender.name} got frozen!\n'
 
         # Checks if move procs Paralysis
         if 'Paralyze' in self.effects:
             if 'immune' not in self.effects['Paralyze'] or self.effects['Paralyze']['immune'] not in defender.types:
                 if 'chance' not in self.effects['Paralyze'] or random.random() < self.effects['Paralyze']['chance']:
                     if 'Paralyze' in defender.start_status:
-                        print(f'{defender.name} got paralyzed, but they are already paralyzed!')
+                        log += f'{defender.name} got paralyzed, but they are already paralyzed!\n'
                     else:
-                        print(f'{defender.name} got paralyzed!')
+                        log += f'{defender.name} got paralyzed!\n'
                         defender.start_status['Paralyze'] = {}
                         defender.end_status['Paralyze'] = {}
             else:
-                print(f'{defender.name} got paralyzed, but they are immune!')
+                log += f'{defender.name} got paralyzed, but they are immune!\n'
 
         # Checks if move procs Flinch
         if 'Flinch' in self.effects and 'chance' in self.effects['Flinch']:
             if random.random() < self.effects['Flinch']['chance']:
-                print(f'{defender.name} flinched!')
+                log += f'{defender.name} flinched!\n'
                 defender.start_status['Flinch'] = {}
 
         # Checks if move procs Confuse
         if 'Confuse' in self.effects:
             if 'chance' not in self.effects['Confuse'] or random.random() < self.effects['Confuse']['chance']:
                 if 'Confuse' in defender.start_status:
-                    print(f'{defender.name} got confused, but they are already confused!')
+                    log += f'{defender.name} got confused, but they are already confused!\n'
                 else:
-                    print(f'{defender.name} got confused!')
+                    log += f'{defender.name} got confused!\n'
                     defender.start_status['Confuse'] = {'turns': random.randint(1, 4)}
 
         # Checks if move procs Sleep
@@ -351,9 +353,9 @@ class Move:
             if self.effects['Sleep']['target'] == 'user':
                 user = attacker
             if 'Sleep' in user.start_status:
-                print(f'{user.name} is already asleep!')
+                log += f'{user.name} is already asleep!\n'
             else:
-                print(f'{user.name} feel asleep')
+                log += f'{user.name} feel asleep\n'
                 user.start_status['Sleep'] = {'turns': random.randint(1, 5)}
 
         # Checks if move changes stat
@@ -378,7 +380,8 @@ class Move:
                         val = min(max(user.start_status['StatChange'][stat] + self.effects['StatChange']['change'], -6), 6)
                         user.start_status['StatChange'][stat] = val
                         user.end_status['StatChange'][stat] = val
-                    print(f"{user.name}'s {stat} changed by {self.effects['StatChange']['change']}")
+                    log += f"{user.name}'s {stat} changed by {self.effects['StatChange']['change']}\n"
+        return log
 
     def activate_move(self, attacker, defender):
         """
@@ -388,29 +391,29 @@ class Move:
         :param defender (Pokemon: Pokemon object being hit by move
         :return: None
         """
-
+        log = ''
         if self.name == 'Blank':
-            print(f'{attacker.name} was stunned!')
-            return None
+            log += f'{attacker.name} was stunned!\n'
+            return log
 
-        print(f'{attacker.name} uses {self.name} against {defender.name}. ')
+        log += f'{attacker.name} uses {self.name} against {defender.name}.\n'
 
         # Checks if the move actually does anything
         if 'Useless' in self.effects:
-            print('It has no effect!')
+            log += 'It has no effect!\n'
 
         # Checks if move will activate on the second turn
         elif 'Delayed' in self.effects and 'Delayed' not in attacker.start_status:
-            print(f'{attacker.name} is charging up!')
+            log += f'{attacker.name} is charging up!\n'
             attacker.start_status['Delayed'] = self.name
 
         # Checks if move can insta-kill the move
         elif 'Instakill' in self.effects:
             hit_check = self.acc * attacker.accuracy / defender.evasion
             if random.random() > hit_check or attacker.speed < defender.speed:
-                print('It missed!')
+                log += 'It missed!\n'
             else:
-                print(f'It hit! {defender.name} immediately fainted!')
+                log += f'It hit! {defender.name} immediately fainted!\n'
                 defender.health = 0
 
         # Checks if the move will hit multiple times
@@ -418,33 +421,37 @@ class Move:
             if self.effects['Multihit']['times'] == 'multiple':
                 choice = [2, 3, 4, 5]
                 times = random.choices(choice, weights=[3, 3, 1, 1], k=1)[0]
-                print(f'It hits {times} times!')
+                log += f'It hits {times} times!\n'
                 for i in range(times):
-                    dmg = self.calc_damage(attacker, defender)
+                    dmg, l = self.calc_damage(attacker, defender)
+                    log += l
                     defender.health -= dmg
 
             # Case when the move hits only twice
             elif self.effects['Multihit']['times'] == 'twice':
-                print('It hits 2 times!')
-                dmg = self.calc_damage(attacker, defender)
+                log += 'It hits 2 times!\n'
+                dmg, l = self.calc_damage(attacker, defender)
+                log += l
                 defender.health -= dmg
-                dmg = self.calc_damage(attacker, defender)
+                dmg, l = self.calc_damage(attacker, defender)
+                log += l
                 defender.health -= dmg
 
         # Checks moves that only strike once
         else:
-            dmg = self.calc_damage(attacker, defender)
+            dmg, l = self.calc_damage(attacker, defender)
+            log += l
             defender.health -= dmg
 
             # Checks if move will deal splash back damage against attacker
             if 'Recoil' in self.effects:
                 recoil = int(dmg / 4)
-                print(f'{attacker.name} took {recoil} damage as recoil!')
+                log += f'{attacker.name} took {recoil} damage as recoil!\n'
                 attacker.health -= recoil
 
             # Checks if move will cause attacker to self destruct
             elif 'SelfDestruct' in self.effects:
-                print(f'{attacker.name} fainted after the attack!')
+                log += f'{attacker.name} fainted after the attack!\n'
                 attacker.health = 0
 
             # Checks if move will heal attacker
@@ -453,7 +460,8 @@ class Move:
                 if self.effects['Heal']['type'] == 'lifesteal':
                     health = min(attacker.max_health - attacker.health, dmg // 2)
                 attacker.health += health
-                print(f'{attacker.name} healed {health} HP!')
+                log += f'{attacker.name} healed {health} HP!\n'
+        return log
 
 
 

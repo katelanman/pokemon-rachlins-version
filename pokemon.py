@@ -1,6 +1,6 @@
 import math
 import random
-
+import copy
 
 class Pokemon():
     """
@@ -99,9 +99,11 @@ class Pokemon():
 
     def pick_move(self, defender, moves):
 
+        dummy = copy.deepcopy(defender)
         move_dmg = {}
         for move in self.actual_moves:
-            move_dmg[move] = moves[move].calc_damage(self, defender)
+            dummy.wipe()
+            move_dmg[move] = moves[move].calc_damage(self, dummy)[0]
 
         status_moves = []
         for move in move_dmg:
@@ -114,12 +116,12 @@ class Pokemon():
                 strongest = move
 
         if len(status_moves) >= 1:
-            if len(defender.start_status) == 0:
+            if len(defender.start_status) == 0 and len(defender.end_status) == 0:
                 if random.random() <= .5:
                     return random.choice(status_moves)
-                else:
-                    return strongest
-            else:
-                return strongest
-        else:
-            return strongest
+        return strongest
+
+    def wipe(self):
+        self.start_status = {}
+        self.end_status = {}
+        self.health = self.max_health
