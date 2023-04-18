@@ -11,8 +11,10 @@ def Navbar():
             ],
             brand="Pokemon Showdown",
             brand_href="/",
-            color="dark",
-            dark=True,
+            color="#e4e4e4",
+            light=True,
+            brand_style={'color': '#414141'},
+            style={'fontFamily': 'impact'}
         ),
     ])
 

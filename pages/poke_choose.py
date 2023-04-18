@@ -5,74 +5,60 @@ import base64
 from pokemon import Pokemon
 from driver import pokemons
 
-fake_poke = {'pikachu': 'pikachu', 'snorlax': 'snorlax', 'charizard': 'charizard'}
-fake_dict = {'move1': 1, 'move2': 2, 'move3': 3, 'move4': 4}
-pokemon = ""
-moves = []
-
-# app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 layout = html.Div([
 		html.Div([
 			html.Div([
-				html.H1("Welcome to Pokemon Showdown")
-			], style={'width': '100vw', 'height': '10vh', 'borderBottom': '1px solid black'}),
+				html.H1("Welcome to Pokemon Showdown", style={'margin': '30px 35px', 'fontFamily': 'Pokemon Solid',
+															  'color': '#f5a7a2', '-webkit-text-stroke-width': '2px',
+															  '-webkit-text-stroke-color': '#f06f67'})
+			], style={'width': '90vw', 'height': '8vh', 'margin': '25px 35px'}),
 			html.Div([
 				html.Div([
-					dcc.RadioItems(id='pokemon-options', options=list(pokemons.keys()))
-				], id='pokemon-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
-												'overflow': 'scroll', 'position': 'absolute', 'left': '2.5vw',
-												'top': '20vh'}),
+					html.Div([
+						html.Img(src='https://art.pixilart.com/189628eed95a95b.png',
+								 style={'width': '35vw', 'height': '35vh', 'opacity': '0.6',
+										'borderRadius': '20px 20px 0 0'}),
+						html.Img(src='', id='select-img',
+								 style={'position': 'absolute', 'left': '3vw', 'top': '5vh', 'height': '25vh'})
+					], style={'width': '35vw', 'height': '35vh', 'position': 'absolute',
+							  'left': '2.5vw', 'top': '5vh', 'border': '2px solid #def7ff',
+							  'borderRadius': '20px 20px 0 0', 'overflow': 'hidden'}),
+					html.Div([
+
+					], style={'width': '35vw', 'height': '25vh', 'position': 'absolute',
+							  'left': '2.5vw', 'top': '41vh', 'backgroundColor': '#fcfcfc',
+							  'border': '2px solid #def7ff', 'borderRadius': '0 0 20px 20px'})
+
+				], style={'width': '40vw', 'height': '73vh', 'backgroundColor': '#f0fbff',
+						  'border': '2px solid #def7ff', 'position': 'relative', 'left': '3vw',
+						  'overflow': 'scroll', 'top': '0vh', 'borderRadius': '20px'}),
 				html.Div([
-					dbc.Checklist(options=[], id='move-options')
-				], id='move-select', style={'width': '45vw', 'height': '75vh', 'backgroundColor': '#E4E4E4',
-											'overflow': 'scroll', 'position': 'absolute', 'left': '52.5vw',
-											'top': '20vh'})
+					html.H4('Choose Your Pokemon', style={'margin': '25px'})
+				], style={'width': '25vw', 'height': '8vh', 'backgroundColor': '#f0fbff',
+						  'position': 'absolute', 'left': '45vw', 'top': '22vh',
+						  'borderRadius': '20px 20px 0 0', 'border': '2px solid #def7ff', 'borderBottom': 'none'}),
+				html.Div([
+					dcc.RadioItems(id='pokemon-options',
+								   options=[{'label': [html.Img(src=pokemon.picture), html.Span(name)],
+											 'value': name} for name, pokemon in pokemons.items()],
+								   style={'margin': '20px'}, inputStyle={'margin': '15px'})
+				], id='pokemon-select', style={'width': '25vw', 'height': '65vh', 'backgroundColor': '#f0fbff',
+											   'position': 'absolute', 'left': '45vw', 'overflow': 'scroll',
+											   'top': '30vh', 'borderRadius': '0 0 20px 20px',
+											   'border': '2px solid #def7ff', 'borderTop': 'none'}),
+
+				html.Div([
+					html.H4('Choose Your Moves', style={'marginTop': '25px', 'marginLeft': '25px', 'float': 'left'}),
+					html.P('(up to four)', style={'fontStyle': 'italic', 'marginTop': '28px',
+												  'marginLeft': '5px', 'float': 'left'}),
+					html.Div([
+						dbc.Checklist(options=[], id='move-options', style={'margin': '15px', 'marginLeft': '30px'})
+					], id='move-select', style={'width': '25vw', 'height': '60vh', 'overflow': 'scroll'})
+				], style={'width': '25vw', 'height': '73vh', 'backgroundColor': '#f0fbff',
+						  'position': 'absolute', 'left': '72vw', 'top': '22vh', 'borderRadius': '20px',
+						  'border': '2px solid #def7ff'}),
+
 			])
 		])
 	])
-
-
-# # TODO: replace fake with real
-# @app.callback(
-# 	Output(component_id='move-options', component_property='options'),
-# 	Input(component_id='pokemon-options', component_property='value'))
-# def get_move_options(chosen):
-# 	options = []
-# 	print(chosen)
-# 	if chosen:
-# 		for move in pokemons[chosen].moveset:
-# 			options.append(move)
-#
-# 	return options
-#
-# @app.callback(
-# 	Output("pokemon", "data"),
-#	Input("", "")
-# )
-
-# @app.callback(
-#     [Output('select-error', 'is_open'),
-#      Output('new-game-selection', 'is_open', allow_duplicate=True),
-#      Output('error-message', 'children')],
-#     Input('start-game', 'n_clicks'),
-#     State('pokemon-options', 'value'),
-#     State('move-options', 'value'),
-#     prevent_initial_call=True
-# )
-# def pokemon_chosen(started, poke_choice, moves_choice):
-#     if not poke_choice:
-#         return True, True, "Must choose a pokemon"
-#
-#     if len(poke_choice) != 1:
-#         return True, True, "Must select only one pokemon"
-#
-#     if not moves_choice:
-#         return True, True, "Must select moves"
-#
-#     if len(moves_choice) != 4:
-#         return True, True, "Must select exactly 4 moves"
-#
-#     pokemon = poke_choice
-#     moves = moves_choice
-#     return False, False, ""
