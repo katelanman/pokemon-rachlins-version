@@ -106,6 +106,7 @@ class Pokemon():
             dummy.wipe()
             move_dmg[move] = moves[move].calc_damage(self, dummy)[0]
 
+
         status_moves = []
         for move in move_dmg:
             if move_dmg[move] == 0:

@@ -1,8 +1,6 @@
 import random
 import math
 
-
-
 class Move:
     """
     Move object that represents a single move a Pokemon can use from Gen 1.
@@ -82,7 +80,10 @@ class Move:
                   "Dark": 1, "Steel": 0.5, "Fairy": 2},
         "Fairy": {"Normal": 1, "Fire": 0.5, "Water": 1, "Grass": 1, "Electric": 1, "Ice": 1, "Fighting": 2, "Poison": 1,
                   "Ground": 0.5, "Flying": 1, "Psychic": 1, "Bug": 1, "Rock": 1, "Ghost": 1, "Dragon": 2, "Dark": 2,
-                  "Steel": 0.5, "Fairy": 1}
+                  "Steel": 0.5, "Fairy": 1},
+        "True": {"Normal": 1, "Fire": 1, "Water": 1, "Grass": 1, "Electric": 1, "Ice": 1, "Fighting": 1, "Poison": 1,
+                  "Ground": 1, "Flying": 1, "Psychic": 1, "Bug": 1, "Rock": 1, "Ghost": 1, "Dragon": 1, "Dark": 1,
+                  "Steel": 1, "Fairy": 1}
     }
     STAGES = {-6: 0.35, -5: 0.28, -4: 0.33, -3: 0.4, -2: 0.5, -1: 0.66,
               0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4}
@@ -350,17 +351,20 @@ class Move:
 
         # Checks if move procs Sleep
         if 'Sleep' in self.effects:
-            user = defender
-            if self.effects['Sleep']['target'] == 'user':
-                user = attacker
+            user = attacker
+            if self.effects['Sleep']['target'] != 'self':
+                user = defender
             if 'Sleep' in user.start_status:
                 log += f'{user.name} is already asleep!\n'
             else:
                 log += f'{user.name} feel asleep\n'
-                user.start_status['Sleep'] = {'turns': random.randint(1, 5)}
+                if self.name == 'Rest':
+                    user.start_status['Sleep'] = {'turns': 2}
+                else:
+                    user.start_status['Sleep'] = {'turns': random.randint(1, 5)}
 
         # Checks if move changes stat
-        if 'StatChange' in self.effects:
+        if 'StatChange' in self.effects and len(self.effects['StatChange']) > 0:
             if random.random() < self.effects['StatChange']['chance']:
                 user = defender
                 if self.effects['StatChange']['target'] == 'user':
@@ -393,8 +397,12 @@ class Move:
         :return: None
         """
         log = ''
-        if self.name == 'Blank':
-            log += f'{attacker.name} was stunned!\n'
+        if '!' in self.name:
+            log += f'{attacker.name} {self.desc}\n'
+            if 'onfu' in self.name:
+                dmg, l = self.calc_damage(attacker, attacker)
+                log += l
+                attacker.health -= dmg
             return log
 
         log += f'{attacker.name} uses {self.name} against {defender.name}.\n'

@@ -77,7 +77,7 @@ def read_moves(url, num_moves = 165):
     data = []
     for i in range(num_moves):
         data.append([i, names[i], types[i], categories[i], pp[i], power[i],
-                     accuracy[i], desc[i], links[i]], names[i].lower())
+                     accuracy[i], desc[i], links[i], names[i].lower()])
 
     # Creates csv housing data for easy object creation
     print('Writing csv!')
@@ -135,8 +135,8 @@ def read_pokemon(url):
         health.append(int(stats[2].text))
         attack.append(int(stats[4].text))
         defense.append(int(stats[6].text))
-        spatt.append(int(stats[8].text))
-        spdef.append(int(stats[10].text))
+        # spatt.append(int(stats[8].text))
+        # spdef.append(int(stats[10].text))
         speed.append(int(stats[12].text))
 
         # Gets pokemon types
@@ -150,13 +150,14 @@ def read_pokemon(url):
         pokemon_types = ';'.join(pokemon_types)
         types.append(pokemon_types)
 
+
         # Gets moves that pokemon can use (through learning / HM / TM)
         name = pokemon.replace("'", "").replace('.', '').replace(' ', '-').replace('♀', '-f').replace('♂', '-m')
         moveset = []
         html = requests.get(f'https://pokemondb.net/pokedex/{name.lower()}/moves/1').text
         soup = BeautifulSoup(html, 'lxml')
         tables = soup.find_all('tbody')
-        tables = tables[:min(3, len(tables))]
+        tables = tables[:min(4, len(tables))]
         for table in tables:
             moves = table.find_all('td', {'class': 'cell-name'})
             for move in moves:
@@ -165,6 +166,19 @@ def read_pokemon(url):
         moveset = list(set(moveset))
         moveset = ';'.join(moveset)
         movesets.append(moveset)
+
+        html = requests.get(f'https://pokemondb.net/pokedex/{name.lower()}').text
+        soup = BeautifulSoup(html, 'lxml')
+        lists = soup.find('main').find_all('ul')[1].find_all('li')
+        special = 1
+        i = 0
+        while not ('Generation 1' in lists[i].text and 'base Special' in lists[i].text) and i < len(lists) - 1:
+            i += 1
+        if i < len(lists) - 1:
+            special = int(lists[i].text[-4:-1])
+        spatt.append(special)
+        spdef.append(special)
+
 
     # Rearranges data in csv-friendly format
     print('Sorting!')
@@ -183,5 +197,5 @@ def read_pokemon(url):
         writer.writerows(data)
     print('Done!')
 
-read_moves(MOVES_URL)
+# read_moves(MOVES_URL)
 read_pokemon(POKEMON_URL)
