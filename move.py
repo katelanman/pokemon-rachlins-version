@@ -96,14 +96,13 @@ class Move:
         Initializes a new move
         :param stats (list): List of values that represent a row from moves.csv, separated by commas
         """
-        self.name = stats[-1]
+        self.name = stats[1]
         self.type = stats[2]
         self.cat = stats[3]
         self.pp = int(stats[4])
         self.pow = int(stats[5])
         self.acc = float(stats[6])
         self.desc = stats[7].replace(';', '.')
-        self.clean_name = stats[1]
         self.effects = {}
         self._generate_effects()
 

@@ -12,7 +12,7 @@ with open('data/moves.csv', 'r', encoding='UTF8') as f:
         line = f.readline().strip().split(',')
         if line[1] != 'Mist':
             line_move = Move(line)
-        moves[line[1]] = line_move
+        moves[line[1].lower()] = line_move
 
 with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
     f.readline()
@@ -21,7 +21,7 @@ with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
         line_poke = Pokemon(line)
         pokemons[line[1]] = line_poke
 
-moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does nothing', ''])
+# moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does nothing', ''])
 
 # for m in moves:
 #     if 'Heal' in moves[m].effects:
@@ -40,10 +40,10 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 # print(defender.name, defender.health)
 # print(attacker.name, attacker.health)
 
-a = pokemons['Mewtwo']
-b = pokemons['Gastly']
-m = moves['DreamEater']
-print(m.activate_move(b, a))
+# a = pokemons['Mewtwo']
+# b = pokemons['Gastly']
+# m = moves['DreamEater']
+# print(m.activate_move(b, a))
 
 
 # test_battle = Battle(a, b)
@@ -54,7 +54,7 @@ print(m.activate_move(b, a))
 #
 # print("opp moves:", a.choose_moves(b, moves))
 
-test_battle = Battle(a, b)
+# test_battle = Battle(a, b)
 
 
 
@@ -66,16 +66,16 @@ test_battle = Battle(a, b)
 # print("opp moves:", a.choose_moves(b, moves))
 
 
-while a.health > 0 and b.health > 0:
-    move_1 = moves[a.pick_move(b, moves)]
-    move_2 = moves[b.pick_move(a, moves)]
-    if type(move_1) == str:
-        move_1 = moves['Blank']
-    if type(move_2) == str:
-        move_2 = moves['Blank']
-    test_battle.round(move_1, move_2)
-
-print(test_battle.log)
+# while a.health > 0 and b.health > 0:
+#     move_1 = moves[a.pick_move(b, moves)]
+#     move_2 = moves[b.pick_move(a, moves)]
+#     if type(move_1) == str:
+#         move_1 = moves['Blank']
+#     if type(move_2) == str:
+#         move_2 = moves['Blank']
+#     test_battle.round(move_1, move_2)
+#
+# print(test_battle.log)
 
 
 

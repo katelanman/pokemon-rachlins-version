@@ -11,7 +11,7 @@ from dash.exceptions import PreventUpdate
 from driver import moves, pokemons
 
 
-battle = None
+battle = {'battle': None}
 
 
 # Define the navbar
@@ -27,6 +27,7 @@ app.layout = html.Div([
     dcc.Store(id="player-pokemon", storage_type="session"),
     dcc.Store(id="player-moves", storage_type="session"),
     dcc.Store(id="opponent-pokemon", storage_type="session"),
+    dcc.Store(id="battle", storage_type="session"),
 
     dcc.Location(id='url', refresh=False),
     nav,
@@ -71,7 +72,7 @@ def get_move_options(chosen):
     options = []
     if chosen:
         for move in pokemons[chosen].moveset:
-            options.append(move)
+            options.append(moves[move].name)
 
     return options
 
@@ -153,13 +154,18 @@ def enable_start(moves_chosen):
 
 
 @app.callback(
-    Output('hidden-div', 'children'),
+    Output('battle', 'data'),
     [Input('player-pokemon', 'data'),
-     Input('opponent-pokemon', 'data')]
+     Input('opponent-pokemon', 'data'),
+     Input('start-game-button', 'n_clicks')],
+    prevent_initial_call=True
 )
-def start_battle(player, opp):
-    battle = Battle(pokemons[player], pokemons[player])
-    return None
+def start_battle(player, opp, started):
+    if started:
+        battle = Battle(pokemons[player], pokemons[opp])
+        return {'battle': battle}
+
+    return ''
 
 
 @app.callback(
@@ -248,7 +254,6 @@ def get_moves(moves):
 
     # number of missing moves
     blank = 4 - len(moves)
-    print(moves)
 
     moves = moves + ['NO MOVE'] * blank
     return moves
@@ -272,10 +277,11 @@ def disable_moves(move2, move3, move4):
     [Input('move-1', 'n_clicks_timestamp'),
      Input('move-2', 'n_clicks_timestamp'),
      Input('move-3', 'n_clicks_timestamp'),
-     Input('move-4', 'n_clicks_timestamp'),
-     Input('player-pokemon', 'data'),
-     Input('opponent-pokemon', 'data'),
-     Input('player-moves', 'data')],
+     Input('move-4', 'n_clicks_timestamp')],
+    [State('player-pokemon', 'data'),
+     State('opponent-pokemon', 'data'),
+     State('player-moves', 'data'),
+     State('battle', 'data')],
     prevent_initial_call=True
 )
 def play_round(m1, m2, m3, m4, player, opp, moves):
@@ -286,8 +292,8 @@ def play_round(m1, m2, m3, m4, player, opp, moves):
         click_times = [m1, m2, m3, m4]
         move_index = click_times.index(max(click_times))
         move_chosen = moves[move_index]
-
-
+        print(battle)
+        battle.round(move_chosen, opp_move)
 
     return False
 

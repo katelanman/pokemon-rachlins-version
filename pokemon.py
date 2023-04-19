@@ -49,11 +49,11 @@ class Pokemon():
         self.speed = math.floor((int(stats[8]) * 2 * self.lv) / 100 + 5)
         self.accuracy = 1.0
         self.evasion = 1.0
-        self.moveset = stats[9].split(';')
+        self.moveset = [_.lower() for _ in stats[9].split(';')]
         self.actual_moves = self.moveset[:4]
         self.start_status = {}
         self.end_status = {}
-        self.picture = stats[-1]
+        self.picture = stats[-2]
         self.max_health = self.health
         self.stat_total = self.max_health + self.attack + self.defense + self.spattack + self.spdefense + self.speed
 
