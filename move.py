@@ -4,7 +4,6 @@ import math
 class Move:
     """
     Move object that represents a single move a Pokemon can use from Gen 1.
-
     ATTRIBUTES:
         name (str):     Name of move
         type (str):     Type of move (e.g. Fire, Water)
@@ -14,7 +13,6 @@ class Move:
         acc (float):    Chance move will actually hit target
         desc (str):     Webscraped description of move
         effects (dict): Dictionary that houses dictionaries that represent individual effects
-
     METHODS:
         __init__:           Initializes object
         __str__:            Creates string representation of object
@@ -22,7 +20,6 @@ class Move:
         calc_damage:        Calculates damage dealt by move
         check_status:       Checks if status is procced by move
         activate_move:      Goes through and runs entire move (damage, status)
-
     """
 
     # Global variables for important info
@@ -220,7 +217,6 @@ class Move:
         """
         Checks move type, checks whether the move it hits / is critical, and
         calculates the damage a move will do.
-
         :param attacker (Pokemon): Pokemon object using the move
         :param defender (Pokemon: Pokemon object being hit by move
         :return damage (int): Damage that move will do
@@ -282,7 +278,6 @@ class Move:
         Checks if the move causes to defender / attacker to gain a status effect or stat change
         If it successfully does inflict one of the above, add it to the status dictionary for
         the respective Pokemon
-
         :param attacker (Pokemon): Pokemon object using the move
         :param defender (Pokemon: Pokemon object being hit by move
         :return: None
@@ -364,7 +359,7 @@ class Move:
                     user.start_status['Sleep'] = {'turns': random.randint(1, 5)}
 
         # Checks if move changes stat
-        if 'StatChange' in self.effects and len(self.effects['StatChange']) > 0:
+        if 'StatChange' in self.effects and len(self.effects['StatChange']) > 0 and 'target' in self.effects['StatChange']:
             if random.random() < self.effects['StatChange']['chance']:
                 user = defender
                 if self.effects['StatChange']['target'] == 'user':
@@ -391,7 +386,6 @@ class Move:
     def activate_move(self, attacker, defender):
         """
         Complete activates a move, including multi damage calculation / non-status effects
-
         :param attacker (Pokemon): Pokemon object using the move
         :param defender (Pokemon: Pokemon object being hit by move
         :return: None
@@ -471,6 +465,3 @@ class Move:
                 attacker.health += health
                 log += f'{attacker.name} healed {health} HP!\n'
         return log
-
-
-

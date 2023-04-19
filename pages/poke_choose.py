@@ -10,8 +10,8 @@ layout = html.Div([
 		html.Div([
 			html.Div([
 				html.H1("Welcome to Pokemon Showdown", style={'margin': '30px 35px', 'fontFamily': 'Pokemon Solid',
-															  'color': '#f5a7a2', '-webkit-text-stroke-width': '2px',
-															  '-webkit-text-stroke-color': '#f06f67'})
+															  'color': '#f5a7a2', 'WebkitTextStrokeWidth': '2px',
+															  'WebkitTextStrokeColor': '#f06f67'})
 			], style={'width': '90vw', 'height': '8vh', 'margin': '25px 35px'}),
 			html.Div([
 				html.Div([

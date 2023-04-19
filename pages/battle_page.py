@@ -16,7 +16,7 @@ layout = html.Div([
                         html.H3('Pokemon Name', id='opponent-name',
                                 style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
                                        'fontSize': '25px', 'fontFamily': 'impact',
-                                       '-webkit-text-stroke-width': '.5px', '-webkit-text-stroke-color': '#e4e4e4'}),
+                                       'WebkitTextStrokeWidth': '.5px', 'WebkitTextStrokeColor': '#e4e4e4'}),
 
                         # TODO: function to change HP after damage (should be able to just adjust width of
                         #  green box --> i made it so we can just use the % health as width fingers crossed it works)
@@ -49,7 +49,7 @@ layout = html.Div([
             html.Div([
                     # TODO: change image
                     html.Img(src='https://img.pokemondb.net/sprites/black-white/anim/normal/pikachu.gif',
-                             id='player-sprite', style={'width': '20%', 'left': '10%', 'top': '25%',
+                             id='player-sprite', style={'width': '20%', 'left': '10%', 'bottom': '5%',
                                                         'float': 'left', 'position': 'absolute'}),
 
                     # stats box
@@ -58,7 +58,7 @@ layout = html.Div([
                         html.H3('Pokemon Name', id='player-name',
                                 style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
                                        'fontSize': '25px', 'fontFamily': 'impact',
-                                       '-webkit-text-stroke-width': '.5px', '-webkit-text-stroke-color': '#e4e4e4'}),
+                                       'WebkitTextStrokeWidth': '.5px', 'WebkitTextStrokeColor': '#e4e4e4'}),
 
                         # TODO: implement damage taken fn here
                         # hp box
@@ -131,44 +131,48 @@ layout = html.Div([
 
         # TODO: actual pokemon data
         html.Div([
-            dbc.Row([
-                html.P('POKEMON', id='player-describe',
-                       style={'textIndent': '25px', 'fontWeight': 'bold', 'fontSize': '20px',
-                                                'float': 'left'}),
-                html.P('Types:',   style={'textIndent': '40px', 'fontWeight': 'bold',
-                                                         'fontSize': '16px'}),
-            ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
+            html.Div([
+                html.H3('POKEMON', id='player-describe',
+                       style={'fontWeight': 'bold', 'fontSize': '20px'}),
+                html.P('Types', id='player-types', style={'fontWeight': 'bold', 'fontSize': '16px'}),
+            ], style={'width': '95%', 'height': '20%', 'position': 'relative', 'margin': '5%'}),
 
-            dbc.Row([
-                html.P('hP:', id='player-hp', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Stats:', id='player-stats', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Status:', id='player-status', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Condition:', id='player-cond', style={'textIndent': '40px', 'fontWeight': 'bold'})
-            ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
+            html.Div([
+                html.P('hP:', id='player-hp', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Status Condition:', id='player-status', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Speed:', id='player-speed', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Attack:', id='player-attack', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Defense:', id='player-defense', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Special Attack:', id='player-spattack', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Special Defense:', id='player-spdefense', style={'fontWeight': 'bold', 'marginTop': '5%'})
 
-        ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
-                  'margin': '2.5%', 'position': 'relative'}),
+            ], style={'width': '95%', 'height': '30%', 'textAlign': 'left', 'position': 'relative',
+                      'margin': '2.5% 5%'})
+
+        ], style={'height': '55%', 'width': '45%', 'backgroundColor': '#FCFCFC',
+                  'margin': '2.5%', 'position': 'relative', 'float': 'left'}),
 
         # TODO: actual pokemon data
         html.Div([
-            dbc.Row([
-                html.P('POKEMON', id='opponent-describe',
-                       style={'textIndent': '25px', 'fontWeight': 'bold', 'fontSize': '20px',
-                                         'float': 'left'}),
-                html.P('Types:', style={'textIndent': '40px', 'fontWeight': 'bold',
-                                                       'fontSize': '16px'}),
-            ], style={'width': '95%', 'height': '20%', 'position': 'absolute'}),
+            html.Div([
+               html.H3('POKEMON', id='opp-describe',
+                        style={'fontWeight': 'bold', 'fontSize': '20px'}),
+                html.P('Types', id='opp-types', style={'fontWeight': 'bold', 'fontSize': '16px'}),
+            ], style={'width': '95%', 'height': '20%', 'position': 'relative', 'margin': '5%'}),
 
-            # TODO: style bc it hates me ??
-            dbc.Row([
-                html.P('hP:', id='opp-hp', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Stats:', id='opp-stats', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Status:', id='opp-status', style={'textIndent': '40px', 'fontWeight': 'bold'}),
-                html.P('Condition:', id='opp-cond', style={'textIndent': '40px', 'fontWeight': 'bold'})
-            ], style={'width': '95%', 'height': '80%', 'textAlign': 'left', 'position': 'absolute', 'top': '20%'})
+            html.Div([
+                html.P('hP:', id='opp-hp', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Status Condition:', id='opp-status', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Speed:', id='opp-speed', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Attack:', id='opp-attack', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Defense:', id='opp-defense', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Special Attack:', id='opp-spattack', style={'fontWeight': 'bold', 'marginTop': '5%'}),
+                html.P('Special Defense:', id='opp-spdefense', style={'fontWeight': 'bold', 'marginTop': '5%'})
+            ], style={'width': '95%', 'height': '30%', 'textAlign': 'left', 'position': 'relative',
+                      'margin': '2.5% 5%'})
 
-        ], style={'height': '25%', 'width': '95%', 'backgroundColor': '#FCFCFC',
-                  'margin': '2.5%', 'position': 'relative'}),
+        ], style={'height': '55%', 'width': '45%', 'backgroundColor': '#FCFCFC', 'margin': '2.5%',
+                  'position': 'relative', 'float': 'left'}),
 
     # TODO: website font
     ], style={'width': '40vw', 'height': '88vh', 'float': 'left', 'backgroundColor': '#EEEEEE',

@@ -178,16 +178,13 @@ class Battle:
         if "Badly Poisoned" in self.poke1.end_status.keys():
             self.poke1.heath -= self.poke1.max_health / \
                                 (16 * self.poke1.end_status["Badly Poisoned"]["turns"])
-            
         if "Badly Poisoned" in self.poke2.end_status.keys():
             self.poke2.heath -= self.poke2.max_health / \
                                 (16 * self.poke2.end_status["Badly Poisoned"]["turns"])
-                                
         # Check for Seeded which removes health from victim and adds health to opponent
         if "Seeded" in self.poke1.end_status.keys():
             self.poke1.health -= self.poke1.max_health / 16
             self.poke2.health += self.poke1.max_health / 16
-        
         if "Seeded" in self.poke2.end_status.keys():
             self.poke2.health -= self.poke2.max_health / 16
             self.poke1.health += self.poke2.max_health / 16
