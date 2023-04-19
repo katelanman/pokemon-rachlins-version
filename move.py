@@ -258,10 +258,10 @@ class Move:
 
         # Calculates damage using formula, accounts for STAB / type advantage
         damage = (((2 * attacker.lv * crit / 5 + 2) * self.pow * a/d)/50 + 2)
-
+        print(attacker.lv, crit, self.pow, a, d)
+        print(attacker.name, self.name, damage)
         if self.type in attacker.types:
             damage *= 1.5
-            # print('STAB!')
         for poke_type in defender.types:
             change = Move.TYPE_ADVANTAGE[self.type][poke_type]
             damage *= change

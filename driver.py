@@ -44,15 +44,17 @@ a = pokemons['Mewtwo']
 b = pokemons['Gastly']
 
 test_battle = Battle(a, b)
-c = a.get_opponents(pokemons)
-print(c)
-opp = a.random_opp(c, pokemons)
-print("opp name:", opp, "type:", type(opp))
-
-print("opp moves:", a.choose_moves(b, moves))
 
 
-"""while a.health > 0 and b.health > 0:
+# c = a.get_opponents(pokemons)
+# print(c)
+# opp = a.random_opp(c, pokemons)
+# print("opp name:", opp, "type:", type(opp))
+#
+# print("opp moves:", a.choose_moves(b, moves))
+
+
+while a.health > 0 and b.health > 0:
     move_1 = moves[a.pick_move(b, moves)]
     move_2 = moves[b.pick_move(a, moves)]
     if type(move_1) == str:
@@ -61,7 +63,7 @@ print("opp moves:", a.choose_moves(b, moves))
         move_2 = moves['Blank']
     test_battle.round(move_1, move_2)
 
-print(test_battle.log)"""
+print(test_battle.log)
 
 # a = pokemons['Pikachu']
 # b = pokemons['Abra']

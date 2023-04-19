@@ -38,6 +38,7 @@ class Battle:
         if "Paralyze" in self.poke2.start_status.keys():
             self.poke2.speed = self.poke2.speed // 2
 
+
         # define a faster and slower Pokemon to determine which one goes first
         if self.poke1.speed >= self.poke2.speed:
             self.faster = self.poke1
@@ -45,6 +46,7 @@ class Battle:
         else:
             self.faster = self.poke2
             self.slower = self.poke1
+
 
         # check start statuses for the faster Pokemon
         if "Burn" in self.faster.start_status.keys():
