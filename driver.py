@@ -1,7 +1,6 @@
 
 from move import Move
 from pokemon import Pokemon
-from battle import Battle
 
 moves = {} # {name: object}
 pokemons = {} # {name: object}
@@ -10,16 +9,8 @@ with open('data/moves.csv', 'r', encoding='UTF8') as f:
     f.readline()
     for i in range(165):
         line = f.readline().strip().split(',')
-<<<<<<< HEAD
-        if line[1] == 'SelfDestruct':
-            line[1] = 'Selfdestruct'
         line_move = Move(line)
-        moves[line[1]] = line_move
-=======
-        if line[1] != 'Mist':
-            line_move = Move(line)
         moves[line[1].lower()] = line_move
->>>>>>> 08a6ab1a76c6c69b187b346d693ccf560a2cdce4
 
 with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
     f.readline()

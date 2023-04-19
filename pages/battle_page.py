@@ -12,19 +12,19 @@ layout = html.Div([
             html.Div([
                     # stats box
                     html.Div([
-                        # TODO: get pokemon name
+
                         html.H3('Pokemon Name', id='opponent-name',
                                 style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
                                        'fontSize': '25px', 'fontFamily': 'impact',
                                        'WebkitTextStrokeWidth': '.5px', 'WebkitTextStrokeColor': '#e4e4e4'}),
 
-                        # TODO: function to change HP after damage (should be able to just adjust width of
-                        #  green box --> i made it so we can just use the % health as width fingers crossed it works)
                         # hp box
                         html.Div([
                             html.H4('HP', style={'margin': '1px 3px', 'fontSize': '2vh'}),
                             html.Div([
-                                html.Div([], style={'width': '100%', 'height': '100%', 'backgroundColor': 'green'})
+                                html.Div([], id='opp-hp-bar', style={'width': '100%', 'height': '100%',
+                                                                     'backgroundColor': 'green',
+                                                                     'position': 'absolute'})
                             ], style={'width': '80%', 'height': '60%', 'backgroundColor': 'white',
                                       'position': 'absolute', 'top': '20%', 'left': '18%',
                                       'border': '1px solid #919191', 'borderTop': '1px solid #E4E4E4',
@@ -38,7 +38,6 @@ layout = html.Div([
                     ], style={'width': '35%', 'height': '35%', 'backgroundColor': '#96c23c', 'float': 'left',
                               'left': '0%', 'top': '20%', 'position': 'absolute', 'borderRadius': '0 3px 3px 0'}),
 
-                    # TODO: change images based on user pokemon
                     html.Img(src='',
                              id='opponent-sprite', style={'width': '20%', 'position': 'absolute', 'right': '10%',
                                                           'top': '15%', 'float': 'left'})
@@ -47,26 +46,24 @@ layout = html.Div([
 
             # player
             html.Div([
-                    # TODO: change image
                     html.Img(src='',
                              id='player-sprite', style={'width': '20%', 'left': '10%', 'bottom': '5%',
                                                         'float': 'left', 'position': 'absolute'}),
 
                     # stats box
                     html.Div([
-                        # TODO: pokemon name
                         html.H3('Pokemon Name', id='player-name',
                                 style={'position': 'absolute', 'marginTop': '1vh', 'marginLeft': '1vw',
                                        'fontSize': '25px', 'fontFamily': 'impact',
                                        'WebkitTextStrokeWidth': '.5px', 'WebkitTextStrokeColor': '#e4e4e4'}),
 
-                        # TODO: implement damage taken fn here
                         # hp box
                         html.Div([
                             html.H4('HP', style={'margin': '1px 3px', 'fontSize': '2vh'}),
                             html.Div([
-                                html.Div([], style={'width': '100%', 'height': '100%', 'backgroundColor': 'green',
-                                                    'borderRadius': '3px'})
+                                html.Div([], id='player-hp-bar', style={'width': '100%', 'height': '100%',
+                                                                    'backgroundColor': 'green',
+                                                                    'borderRadius': '3px'})
                             ], style={'width': '80%', 'height': '60%', 'backgroundColor': 'white',
                                       'position': 'absolute', 'top': '20%', 'left': '18%',
                                       'border': '1px solid #919191', 'borderTop': '1px solid #E4E4E4',
@@ -91,7 +88,6 @@ layout = html.Div([
             # row b - move select
             html.Div([
 
-                # TODO: get moves
                 # move buttons
                 html.Div([
                     html.Button('move 1', id='move-1', n_clicks=0, n_clicks_timestamp=0,
@@ -119,9 +115,9 @@ layout = html.Div([
 
         # game history
         html.Div([
-            # TODO: get game history & style
-        ], style={'overflow': 'scroll', 'width': '95%', 'height': '30%', 'backgroundColor': '#FCFCFC',
-                  'margin': '2.5%'}),
+
+        ], id='game-log', style={'overflow': 'scroll', 'width': '95%', 'height': '30%',
+                                 'backgroundColor': '#FCFCFC', 'margin': '2.5%', 'padding': '20px'}),
 
         # row a - pokemon describe
         html.Div([

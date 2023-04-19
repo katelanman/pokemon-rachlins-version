@@ -6,12 +6,9 @@ from pages import poke_choose, battle_page
 from components import navbar
 from move import Move
 from pokemon import Pokemon
-from battle import Battle
+from battle import round
 from dash.exceptions import PreventUpdate
 from driver import moves, pokemons
-
-
-battle = {'battle': None}
 
 
 # Define the navbar
@@ -152,20 +149,20 @@ def enable_start(moves_chosen):
 
     return True, False
 
-
-@app.callback(
-    Output('battle', 'data'),
-    [Input('player-pokemon', 'data'),
-     Input('opponent-pokemon', 'data'),
-     Input('start-game-button', 'n_clicks')],
-    prevent_initial_call=True
-)
-def start_battle(player, opp, started):
-    if started:
-        battle = Battle(pokemons[player], pokemons[opp])
-        return {'battle': battle}
-
-    return ''
+#
+# @app.callback(
+#     Output('battle', 'data'),
+#     [Input('player-pokemon', 'data'),
+#      Input('opponent-pokemon', 'data'),
+#      Input('start-game-button', 'n_clicks')],
+#     prevent_initial_call=True
+# )
+# def start_battle(player, opp, started):
+#     if started:
+#         battle = Battle(pokemons[player], pokemons[opp])
+#         return {'battle': battle}
+#
+#     return ''
 
 
 @app.callback(
@@ -273,7 +270,9 @@ def disable_moves(move2, move3, move4):
 
 
 @app.callback(
-    Output('error', 'data'),
+    [Output('player-hp-bar', 'style'),
+     Output('opp-hp-bar', 'style'),
+     Output('game-log', 'children')],
     [Input('move-1', 'n_clicks_timestamp'),
      Input('move-2', 'n_clicks_timestamp'),
      Input('move-3', 'n_clicks_timestamp'),
@@ -281,21 +280,40 @@ def disable_moves(move2, move3, move4):
     [State('player-pokemon', 'data'),
      State('opponent-pokemon', 'data'),
      State('player-moves', 'data'),
-     State('battle', 'data')],
+     State('game-log', 'children')],
     prevent_initial_call=True
 )
-def play_round(m1, m2, m3, m4, player, opp, moves):
+def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
     if m1 or m2 or m3 or m4:
-        opp_move = pokemons[opp].choose_random_move()
+        opp_move = pokemons[opp].choose_random_move().lower()
 
         # get chosen move
         click_times = [m1, m2, m3, m4]
         move_index = click_times.index(max(click_times))
-        move_chosen = moves[move_index]
-        print(battle)
-        battle.round(move_chosen, opp_move)
+        move_chosen = moveset[move_index].lower()
 
-    return False
+        log = round(pokemons[player], pokemons[opp], moves[move_chosen], moves[opp_move])
+
+        player_hp_pct = (pokemons[player].health / pokemons[player].max_health) * 100
+        opp_hp_pct = (pokemons[opp].health / pokemons[opp].max_health) * 100
+
+        if player_hp_pct > 0:
+            player_health = str(player_hp_pct) + '%'
+        else:
+            player_health = '0%'
+        if opp_hp_pct > 0:
+            opp_health = str(opp_hp_pct) + '%'
+        else:
+            opp_health = '0%'
+
+        if curr_log:
+            log = curr_log + '\n' + log
+
+        return {'width': player_health, 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, \
+            {'width': opp_health, 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, log
+
+
+    return PreventUpdate, PreventUpdate, PreventUpdate
 
 
 # Run the app on localhost:8050
