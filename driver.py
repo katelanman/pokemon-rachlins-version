@@ -42,14 +42,17 @@ moves['Blank'] = Move([-1, 'Blank', 'Normal', 'Status', '999', '0', '100', 'Does
 
 a = pokemons['Mewtwo']
 b = pokemons['Gastly']
+m = moves['DreamEater']
+print(m.activate_move(b, a))
 
-test_battle = Battle(a, b)
-c = a.get_opponents(pokemons)
-print(c)
-opp = a.random_opp(c, pokemons)
-print("opp name:", opp, "type:", type(opp))
 
-print("opp moves:", a.choose_moves(b, moves))
+# test_battle = Battle(a, b)
+# c = a.get_opponents(pokemons)
+# print(c)
+# opp = a.random_opp(c, pokemons)
+# print("opp name:", opp, "type:", type(opp))
+#
+# print("opp moves:", a.choose_moves(b, moves))
 
 
 """while a.health > 0 and b.health > 0:

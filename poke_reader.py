@@ -167,18 +167,13 @@ def read_pokemon(url):
         moveset = ';'.join(moveset)
         movesets.append(moveset)
 
-        html = requests.get(f'https://pokemondb.net/pokedex/{name.lower()}').text
-        soup = BeautifulSoup(html, 'lxml')
-        lists = soup.find('main').find_all('ul')[1].find_all('li')
-        special = 1
-        i = 0
-        while not ('Generation 1' in lists[i].text and 'base Special' in lists[i].text) and i < len(lists) - 1:
-            i += 1
-        if i < len(lists) - 1:
-            special = int(lists[i].text[-4:-1])
-        spatt.append(special)
-        spdef.append(special)
-
+    html = requests.get('https://pokemondb.net/pokedex/stats/gen1').text
+    soup = BeautifulSoup(html, 'lxml')
+    table = soup.find('tbody').find_all('tr')
+    for tr in table:
+        cells = tr.find_all('td')
+        spatt.append(int(cells[7].text))
+        spdef.append(int(cells[8].text))
 
     # Rearranges data in csv-friendly format
     print('Sorting!')
