@@ -6,14 +6,22 @@ from pages import poke_choose, battle_page
 from components import navbar
 from move import Move
 from pokemon import Pokemon
+from battle import Battle
 from dash.exceptions import PreventUpdate
 from driver import moves, pokemons
+
+
+battle = None
+
 
 # Define the navbar
 nav = navbar.Navbar()
 
 # Define the index page layout
 app.layout = html.Div([
+    # placeholder
+    html.Div(id='hidden-div', style={'display':'none'}),
+
     # stored values
     dcc.Store(id='error', data=False),
     dcc.Store(id="player-pokemon", storage_type="session"),
@@ -145,6 +153,16 @@ def enable_start(moves_chosen):
 
 
 @app.callback(
+    Output('hidden-div', 'children'),
+    [Input('player-pokemon', 'data'),
+     Input('opponent-pokemon', 'data')]
+)
+def start_battle(player, opp):
+    battle = Battle(pokemons[player], pokemons[player])
+    return None
+
+
+@app.callback(
     [Output('opponent-name', 'children'),
      Output('player-name', 'children'),
      Output('move-header', 'children')],
@@ -264,9 +282,12 @@ def play_round(m1, m2, m3, m4, player, opp, moves):
     if m1 or m2 or m3 or m4:
         opp_move = pokemons[opp].choose_random_move()
 
+        # get chosen move
         click_times = [m1, m2, m3, m4]
         move_index = click_times.index(max(click_times))
         move_chosen = moves[move_index]
+
+
 
     return False
 
