@@ -141,7 +141,8 @@ class Move:
                         # Checks for moves that cannot paralyze certain Pokemon types (e.g. electric, ghost)
                         if 'cannot paralyze' in sent:
                             self.effects['Paralyze']['immune'] = sent[
-                                                                 sent.index('cannot paralyze') + 16:sent.index('-type')]
+                                                                 sent.index('cannot paralyze') +
+                                                                 16:sent.index('-type')]
 
                 # Checks for simple move abilities (e.g. hits twice, recoil damage)
                 for phrase, effect in Move.boolean_vals.items():

@@ -90,18 +90,18 @@ layout = html.Div([
 
                 # move buttons
                 html.Div([
-                    html.Button('move 1', id='move-1', n_clicks=0, n_clicks_timestamp=0,
+                    html.Button('move 1', id='move-1', n_clicks=0, n_clicks_timestamp=0, title='',
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '3.5%', 'marginTop': '0',
                                        'backgroundColor': 'pink', 'cursor': 'pointer'}),
-                    html.Button('move 2', id='move-2', n_clicks=0, n_clicks_timestamp=0,
+                    html.Button('move 2', id='move-2', n_clicks=0, n_clicks_timestamp=0, title='',
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '3.5%', 'marginTop': '2.5%',
                                        'backgroundColor': 'yellowgreen', 'cursor': 'pointer'})
                 ], style={'width': '50%', 'float': 'left', 'margin': '0 auto'}),
                 html.Div([
-                    html.Button('move 3', id='move-3', n_clicks=0, n_clicks_timestamp=0,
+                    html.Button('move 3', id='move-3', n_clicks=0, n_clicks_timestamp=0, title='',
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '1.5%', 'marginTop': '0',
                                        'backgroundColor': 'goldenrod', 'cursor': 'pointer'}),
-                    html.Button('move 4', id='move-4', n_clicks=0, n_clicks_timestamp=0,
+                    html.Button('move 4', id='move-4', n_clicks=0, n_clicks_timestamp=0, title='',
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '1.5%', 'marginTop': '2.5%',
                                        'backgroundColor': 'lightblue', 'cursor': 'pointer'})
                 ], style={'width': '50%', 'float': 'left'})

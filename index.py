@@ -25,6 +25,7 @@ app.layout = html.Div([
     dcc.Store(id="player-moves", storage_type="session"),
     dcc.Store(id="opponent-pokemon", storage_type="session"),
     dcc.Store(id="battle", storage_type="session"),
+    dcc.Store(id="won", data=False, storage_type="session"),
 
     dcc.Location(id='url', refresh=False),
     nav,
@@ -199,9 +200,10 @@ def get_sprites(player_name, opp_name):
      Output('player-defense', 'children'),
      Output('player-spattack', 'children'),
      Output('player-spdefense', 'children')],
-    Input('player-pokemon', 'data')
+    [Input('player-pokemon', 'data'),
+     Input('game-log', 'children')]
 )
-def player_stat_box(player_name):
+def player_stat_box(player_name, log):
     pokemon = pokemons[player_name]
     status = 'None'
 
@@ -224,9 +226,10 @@ def player_stat_box(player_name):
      Output('opp-defense', 'children'),
      Output('opp-spattack', 'children'),
      Output('opp-spdefense', 'children')],
-    Input('opponent-pokemon', 'data')
+    [Input('opponent-pokemon', 'data'),
+     Input('game-log', 'children')]
 )
-def player_stat_box(opp_name):
+def opp_stat_box(opp_name, log):
     pokemon = pokemons[opp_name]
     status = 'None'
 
@@ -243,34 +246,45 @@ def player_stat_box(opp_name):
     [Output('move-1', 'children'),
      Output('move-2', 'children'),
      Output('move-3', 'children'),
-     Output('move-4', 'children')],
+     Output('move-4', 'children'),
+     Output('move-1', 'title'),
+     Output('move-2', 'title'),
+     Output('move-3', 'title'),
+     Output('move-4', 'title'),],
     Input('player-moves', 'data')
 )
-def get_moves(moves):
+def get_moves(moves_chosen):
     """ places selected pokemon moves in interface page """
 
     # number of missing moves
-    blank = 4 - len(moves)
+    blank = 4 - len(moves_chosen)
 
-    moves = moves + ['NO MOVE'] * blank
-    return moves
+    moves_chosen = moves_chosen + ['NO MOVE'] * blank
+    return moves_chosen + [moves[_.lower()].desc if _ != 'NO MOVE' else None for _ in moves_chosen]
 
 
 @app.callback(
-    [Output('move-2', 'disabled'),
+    [Output('move-1', 'disabled'),
+     Output('move-2', 'disabled'),
      Output('move-3', 'disabled'),
      Output('move-4', 'disabled')],
-    [Input('move-2', 'children'),
+    [Input('move-1', 'disabled'),
+     Input('move-2', 'children'),
      Input('move-3', 'children'),
-     Input('move-4', 'children')]
+     Input('move-4', 'children'),
+     Input('won', 'data')]
 )
-def disable_moves(move2, move3, move4):
+def disable_moves(move1, move2, move3, move4, won):
     """ disable inactive moves (when less than 4 moves have been selected) """
-    return [True if move == 'NO MOVE' else False for move in [move2, move3, move4]]
+    if won:
+        return [True] * 4
+
+    return [True if move == 'NO MOVE' else False for move in [move1, move2, move3, move4]]
 
 
 @app.callback(
-    [Output('player-hp-bar', 'style'),
+    [Output('won', 'data'),
+     Output('player-hp-bar', 'style'),
      Output('opp-hp-bar', 'style'),
      Output('game-log', 'children')],
     [Input('move-1', 'n_clicks_timestamp'),
@@ -285,6 +299,7 @@ def disable_moves(move2, move3, move4):
 )
 def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
     if m1 or m2 or m3 or m4:
+        won = False
         opp_move = pokemons[opp].choose_random_move().lower()
 
         # get chosen move
@@ -301,19 +316,21 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
             player_health = str(player_hp_pct) + '%'
         else:
             player_health = '0%'
+            won = True
         if opp_hp_pct > 0:
             opp_health = str(opp_hp_pct) + '%'
         else:
             opp_health = '0%'
+            won = True
 
         if curr_log:
             log = curr_log + '\n' + log
 
-        return {'width': player_health, 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, \
+        return won, {'width': player_health, 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, \
             {'width': opp_health, 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, log
 
-
-    return PreventUpdate, PreventUpdate, PreventUpdate
+    return False, {'width': '100%', 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, \
+            {'width': '100%', 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, curr_log
 
 
 # Run the app on localhost:8050
