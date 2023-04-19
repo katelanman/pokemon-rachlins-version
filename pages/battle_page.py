@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
-# from pages.poke_choose import pokemon
 
 
 layout = html.Div([
@@ -8,8 +7,17 @@ layout = html.Div([
     html.Div([
         # row a - battle screen
         html.Div([
+
+            # win box
+            html.Div([
+                html.Div([
+                    html.P(id='win-text', style={'justify': 'center'})
+                ], id='win-text-box')
+            ], style={'position': 'absolute'}),
+            
             # opponent
             html.Div([
+                
                     # stats box
                     html.Div([
 
@@ -39,7 +47,7 @@ layout = html.Div([
                               'left': '0%', 'top': '20%', 'position': 'absolute', 'borderRadius': '0 3px 3px 0'}),
 
                     html.Img(src='',
-                             id='opponent-sprite', style={'width': '20%', 'position': 'absolute', 'right': '10%',
+                             id='opponent-sprite', style={'height': '90%', 'position': 'absolute', 'right': '10%',
                                                           'top': '15%', 'float': 'left'})
 
             ], style={'height': '50%', 'position': 'relative'}),
@@ -47,7 +55,7 @@ layout = html.Div([
             # player
             html.Div([
                     html.Img(src='',
-                             id='player-sprite', style={'width': '20%', 'left': '10%', 'bottom': '5%',
+                             id='player-sprite', style={'height': '90%', 'left': '10%', 'bottom': '10%',
                                                         'float': 'left', 'position': 'absolute'}),
 
                     # stats box

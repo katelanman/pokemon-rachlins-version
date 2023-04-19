@@ -2,7 +2,7 @@ from dash import html, dcc, State
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from app import app
-from pages import poke_choose, battle_page
+from pages import poke_choose, battle_page, create_poke
 from components import navbar
 from move import Move
 from pokemon import Pokemon
@@ -17,7 +17,7 @@ nav = navbar.Navbar()
 # Define the index page layout
 app.layout = html.Div([
     # placeholder
-    html.Div(id='hidden-div', style={'display':'none'}),
+    html.Div(id='hidden-div', style={'display': 'none'}),
 
     # stored values
     dcc.Store(id='error', data=False),
@@ -52,6 +52,8 @@ def display_page(pathname):
         return poke_choose.layout
     if pathname == '/battle':
         return battle_page.layout
+    if pathname == '/create':
+        return create_poke.layout
     else: # if redirected to unknown link
         return "404 Page Error! Please choose a link"
 
@@ -207,11 +209,18 @@ def player_stat_box(player_name, log):
     pokemon = pokemons[player_name]
     status = 'None'
 
+    # display health as pos
+    if pokemon.health > 0:
+        health = pokemon.health
+    else:
+        health = 0
+
+    # check for status effects
     if list(pokemon.start_status.keys()) + list(pokemon.end_status.keys()):
         ls = list(pokemon.start_status.keys()) + list(pokemon.end_status.keys())
         status = ls[0]
 
-    return player_name, pokemon.types, 'hP: ' + str(pokemon.health), 'Status Condition: ' + status, \
+    return player_name, pokemon.types, 'hP: ' + str(health), 'Status Condition: ' + status, \
            'Speed: ' + str(pokemon.speed), 'Attack: ' + str(pokemon.attack), 'Defense: ' + str(pokemon.defense), \
            'Special Attack: ' + str(pokemon.spattack), 'Special Defense: ' + str(pokemon.spdefense)
 
@@ -281,6 +290,39 @@ def disable_moves(move1, move2, move3, move4, won):
 
     return [True if move == 'NO MOVE' else False for move in [move1, move2, move3, move4]]
 
+@app.callback(
+    [Output('create_name', 'value'),
+     Output('create_type', 'value'),
+     Output('create_health', 'value'),
+     Output('create_attack', 'value'),
+     Output('create_defense', 'value'),
+     Output('create_spattack', 'value'),
+     Output('create_spdefense', 'value'),
+     Output('create_speed', 'value'),
+     Output('create_moves', 'value'),
+     Output('create_image', 'value')],
+    [Input('submitted', 'n_clicks')],
+    [State('create_name', 'value'),
+     State('create_type', 'value'),
+     State('create_health', 'value'),
+     State('create_attack', 'value'),
+     State('create_defense', 'value'),
+     State('create_spattack', 'value'),
+     State('create_spdefense', 'value'),
+     State('create_speed', 'value'),
+     State('create_moves', 'value'),
+     State('create_image', 'value')],
+     prevent_initial_call=True
+
+)
+def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, moves, img):
+    if submit:
+        if name not in pokemons:
+            new_poke = Pokemon(name, types, health, att, defe, spat, spdef, speed, img, moves)
+            pokemons[new_poke.name] = new_poke
+
+    return [''] * 10
+
 
 @app.callback(
     [Output('won', 'data'),
@@ -331,6 +373,19 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
 
     return False, {'width': '100%', 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, \
             {'width': '100%', 'height': '100%', 'backgroundColor': 'green', 'borderRadius': '3px'}, curr_log
+
+
+@app.callback(
+    [Output('win-text', 'children'),
+     Output('win-text', 'style'),
+     Output('win-text-box', 'style')],
+    Input('won', 'data')
+)
+def show_win(won):
+    if won:
+        return 'Pokemon Wins!', {'color': '#414141', 'opacity': '1'}, {'backgroundColor': 'white', 'opacity': '0.4'}
+
+    return '', {}, {}
 
 
 # Run the app on localhost:8050

@@ -32,28 +32,28 @@ class Pokemon():
         choose_moves:   Chooses actual moves from moveset
     """
 
-    def __init__(self, stats, lv=50):
+    def __init__(self, name, types, health, attk, defe, spat, spdef, speed, img, moveset, lv=50):
         """
         Initializes a new Pokemon. Level is defaulted to 50
         :param stats: List of values that represent a row from pokemon.csv, separated by commas
         :param lv (int): Level of Pokemon
         """
-        self.name = stats[1]
+        self.name = name
         self.lv = lv
-        self.types = stats[2].split(';')
-        self.health = math.floor((int(stats[3]) * 2 * self.lv) / 100 + self.lv + 10)
-        self.attack = math.floor((int(stats[4]) * 2 * self.lv) / 100 + 5)
-        self.defense = math.floor((int(stats[5]) * 2 * self.lv) / 100 + 5)
-        self.spattack = math.floor((int(stats[6]) * 2 * self.lv) / 100 + 5)
-        self.spdefense = math.floor((int(stats[7]) * 2 * self.lv) / 100 + 5)
-        self.speed = math.floor((int(stats[8]) * 2 * self.lv) / 100 + 5)
+        self.types = types
+        self.health = math.floor((int(health) * 2 * self.lv) / 100 + self.lv + 10)
+        self.attack = math.floor((int(attk) * 2 * self.lv) / 100 + 5)
+        self.defense = math.floor((int(defe) * 2 * self.lv) / 100 + 5)
+        self.spattack = math.floor((int(spat) * 2 * self.lv) / 100 + 5)
+        self.spdefense = math.floor((int(spdef) * 2 * self.lv) / 100 + 5)
+        self.speed = math.floor((int(speed) * 2 * self.lv) / 100 + 5)
         self.accuracy = 1.0
         self.evasion = 1.0
-        self.moveset = [_.lower() for _ in stats[9].split(';')]
+        self.moveset = [_.lower() for _ in moveset]
         self.actual_moves = self.moveset[:4]
         self.start_status = {}
         self.end_status = {}
-        self.picture = stats[-2]
+        self.picture = img
         self.max_health = self.health
         self.stat_total = self.max_health + self.attack + self.defense + self.spattack + self.spdefense + self.speed
 
