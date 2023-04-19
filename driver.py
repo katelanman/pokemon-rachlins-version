@@ -62,8 +62,12 @@ while a.health > 0 and b.health > 0:
     if type(move_2) == str:
         move_2 = moves['Blank']
     test_battle.round(move_1, move_2)
+<<<<<<< HEAD
 
 print(test_battle.log)
+=======
+print(test_battle.log)"""
+>>>>>>> 2436d6c065ae463351525b3229ad354aad0fb910
 
 # a = pokemons['Pikachu']
 # b = pokemons['Abra']

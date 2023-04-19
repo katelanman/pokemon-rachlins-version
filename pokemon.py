@@ -2,10 +2,10 @@ import math
 import random
 import copy
 
+
 class Pokemon():
     """
     Pokemon object that represents a Pokemon from Gen 1 to use in fresh battles
-
     ATTRIBUTES:
         name (str):                 Name of the pokemon
         lv (int):                   Level of Pokemon
@@ -25,7 +25,6 @@ class Pokemon():
         picture (str):              Link to picture to be used in battle (currently not implemented)
         max_health (int):           Maximum health a Pokemon has in battle
         stat_total (int):           Sum of the stats of a pokemon to get total stats
-
     METHODS:
         __init__:       Initializes object
         __str__:        Creates string representation of object
@@ -36,7 +35,6 @@ class Pokemon():
     def __init__(self, stats, lv=50):
         """
         Initializes a new Pokemon. Level is defaulted to 50
-
         :param stats: List of values that represent a row from pokemon.csv, separated by commas
         :param lv (int): Level of Pokemon
         """
@@ -62,7 +60,6 @@ class Pokemon():
     def get_stat(self, stat):
         """
         Simple getter function that gets necessary stat
-
         :param stat (str): Stat to get
         :return (list): List of stats to get
         """
@@ -156,6 +153,7 @@ class Pokemon():
         """
         lst_opps = self.get_opponents(pokemons)
         opp = lst_opps[random.randint(0, len(lst_opps)-1)]
+
         return pokemons[opp]
 
     def pick_move(self, defender, moves):
@@ -165,7 +163,7 @@ class Pokemon():
         :param moves:
         :return: list
         """
-        
+
         dummy = copy.deepcopy(defender)
         move_dmg = {}
         for move in self.actual_moves:
@@ -192,6 +190,3 @@ class Pokemon():
         self.start_status = {}
         self.end_status = {}
         self.health = self.max_health
-
-
-
