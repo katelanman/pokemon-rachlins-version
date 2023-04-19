@@ -6,18 +6,27 @@ from pages import poke_choose, battle_page
 from components import navbar
 from move import Move
 from pokemon import Pokemon
+from battle import Battle
 from dash.exceptions import PreventUpdate
 from driver import moves, pokemons
+
+
+battle = None
+
 
 # Define the navbar
 nav = navbar.Navbar()
 
 # Define the index page layout
 app.layout = html.Div([
+    # placeholder
+    html.Div(id='hidden-div', style={'display':'none'}),
+
     # stored values
     dcc.Store(id='error', data=False),
     dcc.Store(id="player-pokemon", storage_type="session"),
     dcc.Store(id="player-moves", storage_type="session"),
+    dcc.Store(id="opponent-pokemon", storage_type="session"),
 
     dcc.Location(id='url', refresh=False),
     nav,
@@ -48,7 +57,6 @@ def display_page(pathname):
         return "404 Page Error! Please choose a link"
 
 
-# TODO: replace fake with real
 @app.callback(
     Output('move-options', 'options'),
     Input('pokemon-options', 'value'),
@@ -110,6 +118,19 @@ def pokemon_chosen(started, poke_choice, moves_choice):
 
     return None, None
 
+
+@app.callback(
+    Output('opponent-pokemon', 'data'),
+    Input('player-pokemon', 'data'),
+    prevent_initial_call=True
+)
+def get_opponent(player):
+    if player:
+        return pokemons[player].random_opp(pokemons).name
+
+    return None
+
+
 @app.callback(
     [Output('start-game-button', 'disabled'),
      Output('select-error', 'is_open')],
@@ -131,27 +152,38 @@ def enable_start(moves_chosen):
     return True, False
 
 
-# TODO: get opponent name
+@app.callback(
+    Output('hidden-div', 'children'),
+    [Input('player-pokemon', 'data'),
+     Input('opponent-pokemon', 'data')]
+)
+def start_battle(player, opp):
+    battle = Battle(pokemons[player], pokemons[player])
+    return None
+
+
 @app.callback(
     [Output('opponent-name', 'children'),
      Output('player-name', 'children'),
      Output('move-header', 'children')],
-    Input('player-pokemon', 'data')
+    [Input('player-pokemon', 'data'),
+     Input('opponent-pokemon', 'data')]
 )
-def add_names(player_name):
+def add_names(player_name, opp_name):
     """ places selected pokemon names in interface page """
-    return player_name, player_name, f'What will {player_name} do?'
+    return opp_name, player_name, f'What will {player_name} do?'
 
 
 # TODO: opponent sprite
 @app.callback(
     [Output('player-sprite', 'src'),
      Output('opponent-sprite', 'src')],
-    Input('player-pokemon', 'data')
+    [Input('player-pokemon', 'data'),
+     Input('opponent-pokemon', 'data')]
 )
-def get_sprites(player_name):
+def get_sprites(player_name, opp_name):
     """ places selected pokemon sprites in interface page """
-    return pokemons[player_name].picture, pokemons[player_name].picture
+    return pokemons[player_name].picture, pokemons[opp_name].picture
 
 
 @app.callback(
@@ -180,6 +212,31 @@ def player_stat_box(player_name):
 
 
 @app.callback(
+    [Output('opp-describe', 'children'),
+     Output('opp-types', 'children'),
+     Output('opp-hp', 'children'),
+     Output('opp-status', 'children'),
+     Output('opp-speed', 'children'),
+     Output('opp-attack', 'children'),
+     Output('opp-defense', 'children'),
+     Output('opp-spattack', 'children'),
+     Output('opp-spdefense', 'children')],
+    Input('opponent-pokemon', 'data')
+)
+def player_stat_box(opp_name):
+    pokemon = pokemons[opp_name]
+    status = 'None'
+
+    if list(pokemon.start_status.keys()) + list(pokemon.end_status.keys()):
+        ls = list(pokemon.start_status.keys()) + list(pokemon.end_status.keys())
+        status = ls[0]
+
+    return opp_name, pokemon.types, 'hP: ' + str(pokemon.health), 'Status Condition: ' + status, \
+           'Speed: ' + str(pokemon.speed), 'Attack: ' + str(pokemon.attack), 'Defense: ' + str(pokemon.defense), \
+           'Special Attack: ' + str(pokemon.spattack), 'Special Defense: ' + str(pokemon.spdefense)
+
+
+@app.callback(
     [Output('move-1', 'children'),
      Output('move-2', 'children'),
      Output('move-3', 'children'),
@@ -191,6 +248,7 @@ def get_moves(moves):
 
     # number of missing moves
     blank = 4 - len(moves)
+    print(moves)
 
     moves = moves + ['NO MOVE'] * blank
     return moves
@@ -209,20 +267,29 @@ def disable_moves(move2, move3, move4):
     return [True if move == 'NO MOVE' else False for move in [move2, move3, move4]]
 
 
-# TODO: tbh i don't know how this is gonna work with the move class and. okay i am decidedly wrong about everyint
-# i dont know how the move and battle classes work well enough apparently
-# @app.callback(
-#     [Output( ),
-#      ],
-#     [Input('move-2', ''),
-#      Input('player-pokemon', ''),
-#      Input('opponent-pokemon', '')]
-# )
-#
-# def exchange_damage(move2, poke1, poke2):
-#     # if battle.faster == poke1:
-#         dif2 = calc_damage(poke1, poke2)
-#         poke2.health -= dif
+@app.callback(
+    Output('error', 'data'),
+    [Input('move-1', 'n_clicks_timestamp'),
+     Input('move-2', 'n_clicks_timestamp'),
+     Input('move-3', 'n_clicks_timestamp'),
+     Input('move-4', 'n_clicks_timestamp'),
+     Input('player-pokemon', 'data'),
+     Input('opponent-pokemon', 'data'),
+     Input('player-moves', 'data')],
+    prevent_initial_call=True
+)
+def play_round(m1, m2, m3, m4, player, opp, moves):
+    if m1 or m2 or m3 or m4:
+        opp_move = pokemons[opp].choose_random_move()
+
+        # get chosen move
+        click_times = [m1, m2, m3, m4]
+        move_index = click_times.index(max(click_times))
+        move_chosen = moves[move_index]
+
+
+
+    return False
 
 
 # Run the app on localhost:8050

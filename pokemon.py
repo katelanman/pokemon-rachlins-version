@@ -144,14 +144,16 @@ class Pokemon():
                 opponents.append(pokemon)
         return opponents
 
-    def random_opp(self, lst_opps, pokemons):
+    def random_opp(self, pokemons):
         """
         Gets random opponent for pokemon of similar ability
         :param lst_opps: list of names of possible opponents
         :param pokemons: dict of pokemon objects
         :return: returns random pokemon opponent
         """
-        opp = lst_opps[random.randint(0, len(lst_opps) - 1)]
+        lst_opps = self.get_opponents(pokemons)
+        opp = lst_opps[random.randint(0, len(lst_opps)-1)]
+
         return pokemons[opp]
 
     def pick_move(self, defender, moves):

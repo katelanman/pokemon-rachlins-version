@@ -39,7 +39,7 @@ layout = html.Div([
                               'left': '0%', 'top': '20%', 'position': 'absolute', 'borderRadius': '0 3px 3px 0'}),
 
                     # TODO: change images based on user pokemon
-                    html.Img(src='https://img.pokemondb.net/sprites/black-white/anim/shiny/snorlax.gif',
+                    html.Img(src='',
                              id='opponent-sprite', style={'width': '20%', 'position': 'absolute', 'right': '10%',
                                                           'top': '15%', 'float': 'left'})
 
@@ -48,7 +48,7 @@ layout = html.Div([
             # player
             html.Div([
                     # TODO: change image
-                    html.Img(src='https://img.pokemondb.net/sprites/black-white/anim/normal/pikachu.gif',
+                    html.Img(src='',
                              id='player-sprite', style={'width': '20%', 'left': '10%', 'bottom': '5%',
                                                         'float': 'left', 'position': 'absolute'}),
 
@@ -94,18 +94,18 @@ layout = html.Div([
                 # TODO: get moves
                 # move buttons
                 html.Div([
-                    html.Button('move 1', id='move-1', n_clicks=0,
+                    html.Button('move 1', id='move-1', n_clicks=0, n_clicks_timestamp=0,
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '3.5%', 'marginTop': '0',
                                        'backgroundColor': 'pink', 'cursor': 'pointer'}),
-                    html.Button('move 2', id='move-2', n_clicks=0,
+                    html.Button('move 2', id='move-2', n_clicks=0, n_clicks_timestamp=0,
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '3.5%', 'marginTop': '2.5%',
                                        'backgroundColor': 'yellowgreen', 'cursor': 'pointer'})
                 ], style={'width': '50%', 'float': 'left', 'margin': '0 auto'}),
                 html.Div([
-                    html.Button('move 3', id='move-3', n_clicks=0,
+                    html.Button('move 3', id='move-3', n_clicks=0, n_clicks_timestamp=0,
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '1.5%', 'marginTop': '0',
                                        'backgroundColor': 'goldenrod', 'cursor': 'pointer'}),
-                    html.Button('move 4', id='move-4', n_clicks=0,
+                    html.Button('move 4', id='move-4', n_clicks=0, n_clicks_timestamp=0,
                                 style={'width': '95%', 'height': '13vh', 'marginLeft': '1.5%', 'marginTop': '2.5%',
                                        'backgroundColor': 'lightblue', 'cursor': 'pointer'})
                 ], style={'width': '50%', 'float': 'left'})

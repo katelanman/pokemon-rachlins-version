@@ -132,6 +132,7 @@ def read_pokemon(url):
         # Gets basic stats
         table = soup.find('table', {'class': 'roundy'})
         stats = table.find_all('b')
+        print(stats.text)
         health.append(int(stats[2].text))
         attack.append(int(stats[4].text))
         defense.append(int(stats[6].text))
