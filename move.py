@@ -103,7 +103,6 @@ class Move:
         self.pow = int(stats[5])
         self.acc = float(stats[6])
         self.desc = stats[7].replace(';', '.')
-        self.clean_name = stats[1]
         self.effects = {}
         self._generate_effects()
 
