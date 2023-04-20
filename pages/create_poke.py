@@ -2,6 +2,8 @@ from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 from driver import moves
 
+TYPES = ['Bug', 'Dragon', 'Electric', 'Fighting', 'Fire', 'Flying', 'Ghost', 'Grass', 'Ground', 'Ice',
+         'Normal', 'Poison', 'Psychic', 'Rock', 'Water']
 
 layout = html.Div([
     html.H1("Create Your Own Pokemon!", style={'margin': '20px'}),
@@ -11,7 +13,7 @@ layout = html.Div([
     ]),
     html.Div([
         html.P("Type:", style={'float': 'left', 'margin': '20px'}),
-        dcc.Input(id='create_type', style={'float': 'left', 'marginTop': '20px'})
+        dcc.Checklist(id='create_type', options=TYPES, style={'float': 'left', 'marginTop': '20px'})
     ]),
     html.Div([
         html.P("Health:", style={'float': 'left', 'margin': '20px'}),

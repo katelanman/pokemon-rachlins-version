@@ -6,7 +6,7 @@ from pages import poke_choose, battle_page, create_poke
 from components import navbar
 from pokemon import Pokemon
 from battle import game_round
-from driver import moves, pokemons
+from driver import moves, pokemons, add_poke
 
 
 # Define the navbar
@@ -369,9 +369,22 @@ def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, m
     if submit:
         if name not in pokemons:
             new_poke = Pokemon(name, types, health, att, defe, spat, spdef, speed, img, moveset)
-            pokemons[new_poke.name] = new_poke
+            # pokemons[new_poke.name] = new_poke
+            add_poke(new_poke)
+            print(pokemons)
 
-    return 0, 0, 0, 0, 0, 0, 0, 0, [], 0
+    return '', [], '', '', '', '', '', '', [], ''
+
+
+@app.callback(
+    Output('pokemon-options', 'options'),
+    Input('new-game-button', 'n_clicks')
+)
+def new_poke_added(new):
+    print('new!', pokemons)
+    return [{'label': [html.Img(src=pokemon.picture, style={'height': '70px'}),
+						html.Span(name)],
+			'value': name} for name, pokemon in pokemons.items()]
 
 
 @app.callback(

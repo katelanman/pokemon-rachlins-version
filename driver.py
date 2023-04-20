@@ -49,4 +49,9 @@ with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
                                   'https://www.ccs.neu.edu/home/rachlin/python/ds3500/img/john.png',
                                   ['Thunder', 'Flamethrower', 'Blizzard', 'Earthquake'])
 
+def add_poke(poke):
+    global pokemons
+    pokemons[poke.name] = poke
+    print(pokemons)
+
 
