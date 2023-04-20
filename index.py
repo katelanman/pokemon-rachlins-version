@@ -4,10 +4,8 @@ from dash.dependencies import Input, Output
 from app import app
 from pages import poke_choose, battle_page, create_poke
 from components import navbar
-from move import Move
 from pokemon import Pokemon
 from battle import game_round
-from dash.exceptions import PreventUpdate
 from driver import moves, pokemons
 
 
@@ -110,7 +108,8 @@ def select_stats(chosen):
     Input('pokemon-options', 'value'),
     prevent_initial_call=True
 )
-def opp_stat_box(poke):
+def select_page_stats(poke):
+    """ gets stats for current selected pokemon on select page """
     pokemon = pokemons[poke]
 
     return 'Types:  ' + '/'.join(pokemon.types), 'hP:  ' + str(pokemon.health), 'Speed:  ' + str(pokemon.speed), \
@@ -146,6 +145,7 @@ def pokemon_chosen(started, poke_choice, moves_choice):
     prevent_initial_call=True
 )
 def get_opponent(player):
+    """ get opponent on game start """
     if player:
         return pokemons[player].random_opp(pokemons).name
 
@@ -192,6 +192,10 @@ def add_names(player_name, opp_name):
     prevent_initial_call=True
 )
 def save_orig(play_name, opp_name):
+    """ Saves the original stats of the pokemon and opponent
+    :param play_name: pokemon object; player's chosen pokemon
+    :param opp_name: pokemon object; opponent's pokemon
+    """
     if play_name and opp_name:
         player = pokemons[play_name]
         opp = pokemons[opp_name]
@@ -228,6 +232,15 @@ def get_sprites(player_name, opp_name):
     prevent_initial_call=True
 )
 def player_stat_box(player_name, log):
+    """
+    get player pokemon description to display
+    Args:
+        player_name: player pokemon
+        log: current game history (will cause to update as rounds are played)
+
+    Returns: player stats to display
+
+    """
     pokemon = pokemons[player_name]
     status = 'None'
 
@@ -262,6 +275,14 @@ def player_stat_box(player_name, log):
     prevent_initial_call=True
 )
 def opp_stat_box(opp_name, log):
+    """
+    get opponent pokemon description to display
+    Args:
+        opp_name: opponent pokemon
+        log: current game history (will cause to update as rounds are played)
+
+    Returns: opponent stats to display
+    """
     pokemon = pokemons[opp_name]
     status = 'None'
 
@@ -344,13 +365,13 @@ def disable_moves(move1, move2, move3, move4, won):
     prevent_initial_call=True
 )
 def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, moveset, img):
-    print(moveset)
+    """ in progress : adds user created pokemon to the game """
     if submit:
         if name not in pokemons:
             new_poke = Pokemon(name, types, health, att, defe, spat, spdef, speed, img, moveset)
             pokemons[new_poke.name] = new_poke
 
-    return [''] * 10
+    return 0, 0, 0, 0, 0, 0, 0, 0, [], 0
 
 
 @app.callback(
@@ -370,6 +391,19 @@ def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, m
     prevent_initial_call=True
 )
 def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
+    """
+    runs a battle round
+    Args:
+        m1-4: Move object; move 1 through 4 of the pokemon played
+        player: pokemon object; player's pokemon
+        opp: pokemon object; opponent's pokemon
+        moveset: list of str; moves that player's pokemon can learn
+        curr_log:
+
+    Returns: won, winner: to check if game has been won and by who
+            player-hp-bar, opp-hp-bar, game-log: stats to display on dash interface
+
+    """
     if m1 or m2 or m3 or m4:
         won = False
         winner = ''
@@ -382,9 +416,11 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
 
         log = game_round(pokemons[player], pokemons[opp], moves[move_chosen], moves[opp_move])
 
+        # health percents
         player_hp_pct = (pokemons[player].health / pokemons[player].max_health) * 100
         opp_hp_pct = (pokemons[opp].health / pokemons[opp].max_health) * 100
 
+        # check if pokemon fainted
         if player_hp_pct > 0:
             player_health = str(player_hp_pct) + '%'
         else:
@@ -398,6 +434,7 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
             won = True
             winner = player
 
+        # ad
         if curr_log:
             log = html.P([curr_log, html.Br(), log])
         else:
@@ -419,6 +456,7 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
      Input('winner', 'data')]
 )
 def show_win(won, winner):
+    """ display winner and style win statement """
     if won:
         return winner + ' Wins!', {'color': '#414141', 'opacity': '1', 'fontSize': '50px', 'margin': '15vh 22vw',
                                    'textAlign': 'center'}, \
@@ -436,6 +474,17 @@ def show_win(won, winner):
     prevent_initial_call=True
 )
 def reset_pokes(new, player, opp, stats):
+    """
+    Resets the pokemon stats of each pokemon
+    Args:
+        new: triggers function on new game opened
+        player: name of player pokemon
+        opp: name of opponent pokemon
+        stats: original stats to reset to
+
+    Returns: nothing. resets pokemon objects
+
+    """
     if stats:
         pokemons[player].wipe(stats['player'])
         pokemons[opp].wipe(stats['opponent'])
