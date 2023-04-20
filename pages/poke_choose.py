@@ -54,7 +54,8 @@ layout = html.Div([
 						  'borderRadius': '20px 20px 0 0', 'border': '2px solid #def7ff', 'borderBottom': 'none'}),
 				html.Div([
 					dcc.RadioItems(id='pokemon-options',
-								   options=[{'label': [html.Img(src=pokemon.picture), html.Span(name)],
+								   options=[{'label': [html.Img(src=pokemon.picture, style={'height': '70px'}),
+													   html.Span(name)],
 											 'value': name} for name, pokemon in pokemons.items()],
 								   style={'margin': '20px'}, inputStyle={'margin': '15px'})
 				], id='pokemon-select', style={'width': '25vw', 'height': '65vh', 'backgroundColor': '#f0fbff',

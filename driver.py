@@ -49,24 +49,4 @@ with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
                                   'https://www.ccs.neu.edu/home/rachlin/python/ds3500/img/john.png',
                                   ['Thunder', 'Flamethrower', 'Blizzard', 'Earthquake'])
 
-# def reset_stats(poke):
-#     with open('data/pokemon.csv', 'r', encoding='UTF8') as f:
-#         f.readline()
-#         for
-
-
-# a = pokemons['Pikachu']
-# b = pokemons['Abra']
-# test_battle = Battle(a, b)
-#
-# while a.health > 0 and b.health > 0:
-#     move_1 = moves[a.choose_random_move()]
-#     move_2 = moves[b.choose_random_move()]
-#     if type(move_1) == str:
-#         move_1 = moves['Blank']
-#     if type(move_2) == str:
-#         move_2 = moves['Blank']
-#
-#     test_battle.round(move_1, move_2)
-
 
