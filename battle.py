@@ -2,6 +2,8 @@
 from pokemon import Pokemon
 from move import Move
 import random
+from dash import Dash, html, dcc, Input, Output, State
+import dash_bootstrap_components as dbc
 
 
 paralyzed = Move([-1, '!Paralysis', 'Normal', 'Status', '999', '0', '100', 'is stunned!', {}])
@@ -12,8 +14,7 @@ frozen = Move([-1, '!Freeze', 'Ice', 'Status', '999', '0', '100', 'is encased in
 flinched = Move([-1, '!Flinch', 'Normal', 'Status', '999', '0', '100', 'is too scared to move!', {}])
 
 
-def round(poke1, poke2, poke1_move, poke2_move):
-
+def game_round(poke1, poke2, poke1_move, poke2_move):
     log = ''
 
     mdict = {poke1: poke1_move, poke2: poke2_move}
@@ -185,7 +186,8 @@ def round(poke1, poke2, poke1_move, poke2_move):
         poke1.health += poke2.max_health / 16
     '''
 
-    log += '-------------------------------------------------'
+    log += '----------------------------------------------------------------------------'
+
     # Check to see if either Pokemon Fainted, ending the battle
     if faster.health <= 0:
         log += str(slower.name) + " Wins!\n"

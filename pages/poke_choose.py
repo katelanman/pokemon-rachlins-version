@@ -26,9 +26,10 @@ layout = html.Div([
 							  'borderRadius': '20px 20px 0 0', 'overflow': 'hidden'}),
 					html.Div([
 
-					], style={'width': '35vw', 'height': '25vh', 'position': 'absolute',
-							  'left': '2.5vw', 'top': '41vh', 'backgroundColor': '#fcfcfc',
-							  'border': '2px solid #def7ff', 'borderRadius': '0 0 20px 20px'})
+
+					], id='select-page-stats', style={'width': '35vw', 'height': '25vh', 'position': 'absolute',
+							  						  'left': '2.5vw', 'top': '41vh', 'backgroundColor': '#fcfcfc',
+							  						  'border': '2px solid #def7ff', 'borderRadius': '0 0 20px 20px'})
 
 				], style={'width': '40vw', 'height': '73vh', 'backgroundColor': '#f0fbff',
 						  'border': '2px solid #def7ff', 'position': 'relative', 'left': '3vw',

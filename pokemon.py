@@ -186,7 +186,16 @@ class Pokemon():
                     return random.choice(status_moves)
         return strongest
 
-    def wipe(self):
+    def wipe(self, start_stats=None):
         self.start_status = {}
         self.end_status = {}
         self.health = self.max_health
+        self.accuracy = 1.0
+        self.evasion = 1.0
+
+        if start_stats:
+            self.attack = start_stats[0]
+            self.defense = start_stats[1]
+            self.spattack = start_stats[2]
+            self.spdefense = start_stats[3]
+            self.speed = start_stats[4]

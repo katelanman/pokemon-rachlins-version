@@ -43,7 +43,7 @@ layout = html.Div([
     ]),
     html.Div([
         html.P("Image Url:", style={'float': 'left', 'margin': '20px'}),
-        html.Input(id='create_image', style={'float': 'left', 'marginTop': '20px'})
+        dcc.Input(id='create_image', style={'float': 'left', 'marginTop': '20px'})
     ]),
     html.Div([
         html.P("Submit:", style={'float': 'left', 'margin': '20px'}),

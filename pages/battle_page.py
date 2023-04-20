@@ -13,7 +13,7 @@ layout = html.Div([
                 html.Div([
                     html.P(id='win-text', style={'justify': 'center'})
                 ], id='win-text-box')
-            ], style={'position': 'absolute'}),
+            ], style={'position': 'absolute', 'height': '50vh', 'width': '55vw'}),
             
             # opponent
             html.Div([
@@ -123,6 +123,7 @@ layout = html.Div([
 
         # game history
         html.Div([
+
 
         ], id='game-log', style={'overflow': 'scroll', 'width': '95%', 'height': '30%',
                                  'backgroundColor': '#FCFCFC', 'margin': '2.5%', 'padding': '20px'}),
