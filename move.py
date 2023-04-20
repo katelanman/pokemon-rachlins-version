@@ -84,6 +84,8 @@ class Move:
     }
     STAGES = {-6: 0.35, -5: 0.28, -4: 0.33, -3: 0.4, -2: 0.5, -1: 0.66,
               0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4}
+
+    # Keywords for adding effects based on move description
     inflict_status = {'burn': 'Burn', 'freez': 'Freeze', 'paralyz': 'Paralyze', 'flinch': 'Flinch',
                       'poisoni': 'Poison', 'confus': 'Confuse'}
     boolean_vals = {'increased critical': 'High Crit', 'one-hit': 'Instakill', 'wild': 'Useless',

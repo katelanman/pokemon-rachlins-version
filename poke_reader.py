@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
+# Global variables for urls to grab files from
 MOVES_URL = 'https://bulbapedia.bulbagarden.net/wiki/List_of_moves'
 POKEMON_URL = 'https://pokemon.fandom.com/wiki/Category:Generation_I_Pok%C3%A9mon'
 NUM_MOVES = 165
@@ -193,5 +194,6 @@ def read_pokemon(url):
         writer.writerows(data)
     print('Done!')
 
+# Functions to call if we need to recreate files
 # read_moves(MOVES_URL)
-read_pokemon(POKEMON_URL)
+# read_pokemon(POKEMON_URL)

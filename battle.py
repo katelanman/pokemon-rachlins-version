@@ -6,6 +6,7 @@ from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 
 
+# Moves that replace Pokemon's current move based on status effect
 paralyzed = Move([-1, '!Paralysis', 'Normal', 'Status', '999', '0', '100', 'is stunned!', {}])
 asleep = Move([-1, '!Asleep', 'Normal', 'Status', '999', '0', '100', 'is sleeping...', {}])
 confused = Move([-1, '!Confuse', 'Normal', 'Physical', '999', '40', '100', 'hurt itself in confusion!', {}])
@@ -15,15 +16,23 @@ flinched = Move([-1, '!Flinch', 'Normal', 'Status', '999', '0', '100', 'is too s
 
 
 def game_round(poke1, poke2, poke1_move, poke2_move):
+    """
+    Simulates a round passing with both Pokemon using a move against each other
+
+    Args:
+        poke1 (Pokemon): First Pokemon (usually) user
+        poke2 (Pokemon): Second Pokemon
+        poke1_move (Move): Move that the first Pokemon plans to move
+        poke2_move (Move): Move that the second Pokemon plans to move
+
+    Returns:
+        log (str): Log of the battle
+
+    """
+
+    # Creates log and Pokemon move dictionary
     log = ''
-
     mdict = {poke1: poke1_move, poke2: poke2_move}
-
-    log += f'{poke1.name} Health: {poke1.health}\n'
-    log += f'{poke2.name} Health: {poke2.health}\n'
-    # initialize "next_move" as an empty string
-    poke1_next_move = ''
-    poke2_next_move = ''
 
     # check paralysis on both Pokemon since it affects speed and therefore who goes first
     if "Paralyze" in poke1.start_status.keys():
@@ -32,7 +41,6 @@ def game_round(poke1, poke2, poke1_move, poke2_move):
     if "Paralyze" in poke2.start_status.keys():
         poke2.speed = poke2.speed // 2
 
-
     # define a faster and slower Pokemon to determine which one goes first
     if poke1.speed >= poke2.speed:
         faster = poke1
@@ -40,7 +48,6 @@ def game_round(poke1, poke2, poke1_move, poke2_move):
     else:
         faster = poke2
         slower = poke1
-
 
     # check start statuses for the faster Pokemon
     if "Burn" in faster.start_status.keys():
@@ -144,7 +151,7 @@ def game_round(poke1, poke2, poke1_move, poke2_move):
     if "Flinch" in slower.start_status.keys():
         # if a Pokemon has the Flinch status they cannot move that turn
         mdict[slower] = flinched
-        del slower.start_status["Flinched"]
+        del slower.start_status["Flinch"]
 
     # Have the slower Pokemon use its move
     log += mdict[slower].activate_move(slower, faster)
@@ -169,24 +176,6 @@ def game_round(poke1, poke2, poke1_move, poke2_move):
         dmg = poke1.max_health // 16
         poke2.health -= poke2.max_health // 16
         log += f'{poke2.name} took {dmg} damage from a status!\n'
-    '''
-    # Check for badly poisoned which increases damage every turn it's inflicted
-    if "Badly Poisoned" in poke1.end_status.keys():
-        poke1.heath -= poke1.max_health / \
-                            (16 * poke1.end_status["Badly Poisoned"]["turns"])
-    if "Badly Poisoned" in poke2.end_status.keys():
-        poke2.heath -= poke2.max_health / \
-                            (16 * poke2.end_status["Badly Poisoned"]["turns"])
-    # Check for Seeded which removes health from victim and adds health to opponent
-    if "Seeded" in poke1.end_status.keys():
-        poke1.health -= poke1.max_health / 16
-        poke2.health += poke1.max_health / 16
-    if "Seeded" in poke2.end_status.keys():
-        poke2.health -= poke2.max_health / 16
-        poke1.health += poke2.max_health / 16
-    '''
-
-    log += '----------------------------------------------------------------------------'
 
     # Check to see if either Pokemon Fainted, ending the battle
     if faster.health <= 0:

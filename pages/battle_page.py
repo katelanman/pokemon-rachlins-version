@@ -89,7 +89,6 @@ layout = html.Div([
                   'borderTop': '2px solid yellowgreen', 'borderLeft': '2px solid yellowgreen', 'margin': '10px'}),
 
         html.Div([
-            # TODO: get player pokemon name
             html.P("What will your pokemon do?", id="move-header",
                    style={'height': '2.5vh', 'margin': '2%', 'fontSize': '20px'}),
 
@@ -134,12 +133,12 @@ layout = html.Div([
                     style={'textIndent': '15px', 'fontWeight': 'bold'})
         ]),
 
-        # TODO: actual pokemon data
         html.Div([
             html.Div([
                 html.H3('POKEMON', id='player-describe',
-                       style={'fontWeight': 'bold', 'fontSize': '20px'}),
-                html.P('Types', id='player-types', style={'fontWeight': 'bold', 'fontSize': '16px'}),
+                       style={'fontWeight': 'bold'}),
+                html.P('Types', id='player-types', style={'fontWeight': 'bold', 'fontSize': '16px',
+                                                          'fontStyle': 'italic'}),
             ], style={'width': '95%', 'height': '20%', 'position': 'relative', 'margin': '5%'}),
 
             html.Div([
@@ -152,17 +151,17 @@ layout = html.Div([
                 html.P('Special Defense:', id='player-spdefense', style={'fontWeight': 'bold', 'marginTop': '5%'})
 
             ], style={'width': '95%', 'height': '30%', 'textAlign': 'left', 'position': 'relative',
-                      'margin': '2.5% 5%'})
+                      'margin': '2.5% 5%', 'color': '#414141'})
 
         ], style={'height': '55%', 'width': '45%', 'backgroundColor': '#FCFCFC',
                   'margin': '2.5%', 'position': 'relative', 'float': 'left'}),
 
-        # TODO: actual pokemon data
         html.Div([
             html.Div([
                html.H3('POKEMON', id='opp-describe',
-                        style={'fontWeight': 'bold', 'fontSize': '20px'}),
-                html.P('Types', id='opp-types', style={'fontWeight': 'bold', 'fontSize': '16px'}),
+                        style={'fontWeight': 'bold'}),
+                html.P('Types', id='opp-types', style={'fontWeight': 'bold', 'fontSize': '16px',
+                                                       'fontStyle': 'italic'}),
             ], style={'width': '95%', 'height': '20%', 'position': 'relative', 'margin': '5%'}),
 
             html.Div([
@@ -174,12 +173,11 @@ layout = html.Div([
                 html.P('Special Attack:', id='opp-spattack', style={'fontWeight': 'bold', 'marginTop': '5%'}),
                 html.P('Special Defense:', id='opp-spdefense', style={'fontWeight': 'bold', 'marginTop': '5%'})
             ], style={'width': '95%', 'height': '30%', 'textAlign': 'left', 'position': 'relative',
-                      'margin': '2.5% 5%'})
+                      'margin': '2.5% 5%', 'color': '#414141'})
 
         ], style={'height': '55%', 'width': '45%', 'backgroundColor': '#FCFCFC', 'margin': '2.5%',
                   'position': 'relative', 'float': 'left'}),
 
-    # TODO: website font
     ], style={'width': '40vw', 'height': '88vh', 'float': 'left', 'backgroundColor': '#EEEEEE',
               'margin': '10px', 'border': '2px solid #E4E4E4', 'borderLeft': '2px solid #C2C2C2',
               'borderTop': '2px solid #C2C2C2'})

@@ -25,7 +25,20 @@ layout = html.Div([
 							  'left': '2.5vw', 'top': '5vh', 'border': '2px solid #def7ff',
 							  'borderRadius': '20px 20px 0 0', 'overflow': 'hidden'}),
 					html.Div([
+						html.Div([
+							html.P('Types:', id='poke-types', style={'fontWeight': 'bold', 'marginLeft': '15%'}),
+							html.P('hP:', id='poke-hp', style={'fontWeight': 'bold', 'marginLeft': '15%'}),
+							html.P('Speed:', id='poke-speed', style={'fontWeight': 'bold', 'marginLeft': '15%'})
+						], style={'float': 'left', 'width': '50%', 'marginTop': '2%'}),
 
+						html.Div([
+							html.P('Attack:', id='poke-attack', style={'fontWeight': 'bold', 'marginLeft': '15%'}),
+							html.P('Defense:', id='poke-defense', style={'fontWeight': 'bold', 'marginLeft': '15%'}),
+							html.P('Special Attack:', id='poke-spattack',
+								   style={'fontWeight': 'bold', 'marginLeft': '15%'}),
+							html.P('Special Defense:', id='poke-spdefense',
+								   style={'fontWeight': 'bold', 'marginLeft': '15%'})
+						], style={'float': 'left', 'marginTop': '2%', 'width': '40%'})
 
 					], id='select-page-stats', style={'width': '35vw', 'height': '25vh', 'position': 'absolute',
 							  						  'left': '2.5vw', 'top': '41vh', 'backgroundColor': '#fcfcfc',
@@ -33,7 +46,7 @@ layout = html.Div([
 
 				], style={'width': '40vw', 'height': '73vh', 'backgroundColor': '#f0fbff',
 						  'border': '2px solid #def7ff', 'position': 'relative', 'left': '3vw',
-						  'overflow': 'scroll', 'top': '0vh', 'borderRadius': '20px'}),
+						  'top': '0vh', 'borderRadius': '20px'}),
 				html.Div([
 					html.H4('Choose Your Pokemon', style={'margin': '25px'})
 				], style={'width': '25vw', 'height': '8vh', 'backgroundColor': '#f0fbff',

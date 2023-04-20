@@ -2,7 +2,6 @@ import math
 import random
 import copy
 
-
 class Pokemon():
     """
     Pokemon object that represents a Pokemon from Gen 1 to use in fresh battles
@@ -22,14 +21,20 @@ class Pokemon():
         actual_moves (list of str): List of moves a Pokemon chooses to use in a battle
         start_status (dict):        Dictionary of current statuses a Pokemon has that activates before their turn
         end_status (dict):          Dictionary of current statuses a Pokemon has that activates after their turn
-        picture (str):              Link to picture to be used in battle (currently not implemented)
+        picture (str):              Link to picture to be used in battle
         max_health (int):           Maximum health a Pokemon has in battle
         stat_total (int):           Sum of the stats of a pokemon to get total stats
+
     METHODS:
-        __init__:       Initializes object
-        __str__:        Creates string representation of object
-        get_stat:       Getter function that returns a stat
-        choose_moves:   Chooses actual moves from moveset
+        __init__:                   Initializes object
+        __str__:                    Creates string representation of object
+        get_stat:                   Getter function that returns a stat
+        choose_moves:               Chooses four actual moves from moveset
+        choose_random_move:         Chooses a random move
+        get_opponents:              Helper function that gets opponents on same relative stat total
+        get_random_opp:             Gets random opponent on same relative stat level
+        pick_move:                  Chooses a strategic move
+        wipe:                       Resets Pokemon stats / statuses
     """
 
     def __init__(self, name, types, health, attk, defe, spat, spdef, speed, img, moveset, lv=50):
@@ -87,20 +92,26 @@ class Pokemon():
 
     def choose_moves(self, defender, moves):
         """
-        Chooses 4 moves from available moves to use in battle. Currently chosen randomly, may
-        implement more informed choosing soon.
-        :return (list): 4 moves to use in battle
+        Chooses 4 moves from available moves to use in battle. Moves are chosen by taking moves that
+        will deal the most damage against an opponent, with a random chance of including a status
+        move.
+
+        :param defender (Pokemon): Opponent Pokemon
+        :moves (dict): Dictionary that maps move name to move object
+        :return: None
         """
         dummy = copy.deepcopy(defender)
 
         print("these are the moves:", moves)
 
+        # Checks if actual moves necesssary to find
         if len(self.moveset) > 4:
             move_dmg = {}
             for move in self.moveset:
                 dummy.wipe()
                 move_dmg[move] = moves[move].calc_damage(self, dummy)[0]
 
+            # Finds status moves
             status_moves = []
             for move in move_dmg:
                 if move_dmg[move] == 0:
@@ -108,16 +119,20 @@ class Pokemon():
 
             chosen_moves = []
 
+            # Checks for strongest move among the moveset
             for i in range(4):
                 max_dmg = max(move_dmg.values())
                 for move in move_dmg:
                     if move_dmg[move] == max_dmg:
                         strongest = move
 
+                # Adds status move at random chance
                 if len(status_moves) >= 1:
                     if len(defender.start_status) == 0 and len(defender.end_status) == 0:
                         if random.random() <= .5:
                             chosen_moves.append(random.choice(status_moves))
+
+                    # Includes the strongest move in the actual moveset
                     else:
                         self.moveset.remove(strongest)
                         del move_dmg[strongest]
@@ -130,6 +145,12 @@ class Pokemon():
             self.actual_moves = chosen_moves
 
     def choose_random_move(self):
+        """
+        Chooses a random move from actual moveset
+
+        Returns:
+            (str): Name of move
+        """
         return random.sample(self.actual_moves, 1)[0]
 
     def get_opponents(self, pokemons):
@@ -140,14 +161,20 @@ class Pokemon():
         """
         opponents = []
         for pokemon in pokemons.keys():
-            if abs(self.stat_total - pokemons[pokemon].stat_total) < 50:
-                opponents.append(pokemon)
+            if pokemon != self.name and abs(self.stat_total - pokemons[pokemon].stat_total) < 50:
+                    opponents.append(pokemon)
+
+        if len(opponents) == 0:
+            for pokemon in pokemons.keys():
+                if pokemon != self.name:
+                    opponents.append(pokemon)
+
         return opponents
 
     def random_opp(self, pokemons):
         """
         Gets random opponent for pokemon of similar ability
-        :param lst_opps: list of names of possible opponents
+
         :param pokemons: dict of pokemon objects
         :return: returns random pokemon opponent
         """
@@ -157,29 +184,36 @@ class Pokemon():
         return pokemons[opp]
 
     def pick_move(self, defender, moves):
-
         """
-        :param defender:
-        :param moves:
-        :return: list
+        Picks a move from moveset based on what will do most damage against opponent
+
+        :param defender (Pokemon): Opponent Pokemon
+        :param moves (dict): Dictionary that maps move name to move object
+        :return (str): Move to use
         """
 
+        # Calculates predicted damage for each move in actual moveset
         dummy = copy.deepcopy(defender)
         move_dmg = {}
         for move in self.actual_moves:
             dummy.wipe()
             move_dmg[move] = moves[move].calc_damage(self, dummy)[0]
 
+        # Finds status moves
         status_moves = []
         for move in move_dmg:
             if move_dmg[move] == 0:
                 status_moves.append(move)
 
-        max_dmg = max(move_dmg.values())
-        for move in move_dmg:
-            if move_dmg[move] == max_dmg:
-                strongest = move
+        # Finds strongest move
+        strongest = self.actual_moves[0]
+        if len(move_dmg.values()) > 0:
+            max_dmg = max(move_dmg.values())
+            for move in move_dmg:
+                if move_dmg[move] == max_dmg:
+                    strongest = move
 
+        # Chooses whether to use damaging move or status move
         if len(status_moves) >= 1:
             if len(defender.start_status) == 0 and len(defender.end_status) == 0:
                 if random.random() <= .5:
@@ -187,12 +221,22 @@ class Pokemon():
         return strongest
 
     def wipe(self, start_stats=None):
+        """
+        Resets a Pokemon to full health / no status effects
+
+        Args:
+            start_stats (list): Previous start stats
+        Returns: None
+        """
+
+        # If no start stats given
         self.start_status = {}
         self.end_status = {}
         self.health = self.max_health
         self.accuracy = 1.0
         self.evasion = 1.0
 
+        # If start stats given
         if start_stats:
             self.attack = start_stats[0]
             self.defense = start_stats[1]

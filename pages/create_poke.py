@@ -39,15 +39,15 @@ layout = html.Div([
     ]),
     html.Div([
         html.P("Moveset:", style={'float': 'left', 'margin': '20px'}),
-        dcc.Checklist(options=moves.keys(), id='create_moves', style={'float': 'left', 'marginTop': '20px'})
+        dcc.Checklist(options=list(moves.keys()), id='create_moves',
+                      style={'float': 'left', 'marginTop': '20px'})
     ]),
     html.Div([
         html.P("Image Url:", style={'float': 'left', 'margin': '20px'}),
         dcc.Input(id='create_image', style={'float': 'left', 'marginTop': '20px'})
     ]),
     html.Div([
-        html.P("Submit:", style={'float': 'left', 'margin': '20px'}),
-        dbc.Button(id='submitted', style={'float': 'left', 'marginTop': '20px'})
+        dbc.Button('Submit', id='submitted', style={'float': 'left', 'marginTop': '20px'})
     ]),
 
 ])

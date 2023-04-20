@@ -24,10 +24,9 @@ app.layout = html.Div([
     dcc.Store(id="player-pokemon", storage_type="session"),
     dcc.Store(id="player-moves", storage_type="session"),
     dcc.Store(id="opponent-pokemon", storage_type="session"),
-    dcc.Store(id="battle", storage_type="session"),
     dcc.Store(id="won", data=False, storage_type="session"),
     dcc.Store(id="winner", data='', storage_type="session"),
-    dcc.Store(id="start-stats", storage_type="session"),
+    dcc.Store(id="start-stats", data=None, storage_type="session"),
 
     dcc.Location(id='url', refresh=False),
     nav,
@@ -98,6 +97,25 @@ def reset_move_options(chosen):
 def select_stats(chosen):
     """ get image and stats for pokemon when clicked on select screen"""
     return pokemons[chosen].picture
+
+
+@app.callback(
+    [Output('poke-types', 'children'),
+     Output('poke-hp', 'children'),
+     Output('poke-speed', 'children'),
+     Output('poke-attack', 'children'),
+     Output('poke-defense', 'children'),
+     Output('poke-spattack', 'children'),
+     Output('poke-spdefense', 'children')],
+    Input('pokemon-options', 'value'),
+    prevent_initial_call=True
+)
+def opp_stat_box(poke):
+    pokemon = pokemons[poke]
+
+    return 'Types:  ' + '/'.join(pokemon.types), 'hP:  ' + str(pokemon.health), 'Speed:  ' + str(pokemon.speed), \
+        'Attack:  ' + str(pokemon.attack), 'Defense:  ' + str(pokemon.defense), \
+        'Special Attack:  ' + str(pokemon.spattack), 'Special Defense:  ' + str(pokemon.spdefense)
 
 
 @app.callback(
@@ -206,7 +224,8 @@ def get_sprites(player_name, opp_name):
      Output('player-spattack', 'children'),
      Output('player-spdefense', 'children')],
     [Input('player-pokemon', 'data'),
-     Input('game-log', 'children')]
+     Input('game-log', 'children')],
+    prevent_initial_call=True
 )
 def player_stat_box(player_name, log):
     pokemon = pokemons[player_name]
@@ -223,7 +242,7 @@ def player_stat_box(player_name, log):
         ls = list(pokemon.start_status.keys()) + list(pokemon.end_status.keys())
         status = ls[0]
 
-    return player_name, pokemon.types, 'hP: ' + str(health), 'Status Condition: ' + status, \
+    return player_name, '/'.join(pokemon.types), 'hP: ' + str(health), 'Status Condition: ' + status, \
         'Speed: ' + str(pokemon.speed), 'Attack: ' + str(pokemon.attack), 'Defense: ' + str(pokemon.defense), \
         'Special Attack: ' + str(pokemon.spattack), 'Special Defense: ' + str(pokemon.spdefense)
 
@@ -239,7 +258,8 @@ def player_stat_box(player_name, log):
      Output('opp-spattack', 'children'),
      Output('opp-spdefense', 'children')],
     [Input('opponent-pokemon', 'data'),
-     Input('game-log', 'children')]
+     Input('game-log', 'children')],
+    prevent_initial_call=True
 )
 def opp_stat_box(opp_name, log):
     pokemon = pokemons[opp_name]
@@ -255,7 +275,7 @@ def opp_stat_box(opp_name, log):
         ls = list(pokemon.start_status.keys()) + list(pokemon.end_status.keys())
         status = ls[0]
 
-    return opp_name, pokemon.types, 'hP: ' + str(pokemon.health), 'Status Condition: ' + status, \
+    return opp_name, '/'.join(pokemon.types), 'hP: ' + str(health), 'Status Condition: ' + status, \
         'Speed: ' + str(pokemon.speed), 'Attack: ' + str(pokemon.attack), 'Defense: ' + str(pokemon.defense), \
         'Special Attack: ' + str(pokemon.spattack), 'Special Defense: ' + str(pokemon.spdefense)
 
@@ -323,10 +343,11 @@ def disable_moves(move1, move2, move3, move4, won):
      State('create_image', 'value')],
     prevent_initial_call=True
 )
-def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, moves, img):
+def create_pokemon(submit, name, types, health, att, defe, spat, spdef, speed, moveset, img):
+    print(moveset)
     if submit:
         if name not in pokemons:
-            new_poke = Pokemon(name, types, health, att, defe, spat, spdef, speed, img, moves)
+            new_poke = Pokemon(name, types, health, att, defe, spat, spdef, speed, img, moveset)
             pokemons[new_poke.name] = new_poke
 
     return [''] * 10
@@ -379,6 +400,8 @@ def play_round(m1, m2, m3, m4, player, opp, moveset, curr_log):
 
         if curr_log:
             log = html.P([curr_log, html.Br(), log])
+        else:
+            log = html.P([log, html.Br()])
 
         return won, winner, {'width': player_health, 'height': '100%', 'backgroundColor': 'green',
                              'borderRadius': '3px'}, {'width': opp_health, 'height': '100%',
@@ -413,8 +436,9 @@ def show_win(won, winner):
     prevent_initial_call=True
 )
 def reset_pokes(new, player, opp, stats):
-    pokemons[player].wipe(stats['player'])
-    pokemons[opp].wipe(stats['opponent'])
+    if stats:
+        pokemons[player].wipe(stats['player'])
+        pokemons[opp].wipe(stats['opponent'])
     return ''
 
 
